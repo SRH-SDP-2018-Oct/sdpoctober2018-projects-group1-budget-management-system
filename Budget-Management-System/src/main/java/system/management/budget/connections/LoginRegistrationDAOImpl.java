@@ -13,7 +13,7 @@ public class LoginRegistrationDAOImpl {
 	//private static final Logger LOGGER = Logger.getLogger(LoginRegistrationDAOImpl.class);
 	public boolean createConnection(String username,String pass){
     	try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root","root");
 			
 			Statement stmt = con.createStatement();
@@ -38,7 +38,7 @@ public class LoginRegistrationDAOImpl {
 	public boolean registrationDbConnection(UserRegistrationVO regClass){
 		boolean registrationResult = false;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root","root");
 			
 			//Statement stmt = con.createStatement();

@@ -1,0 +1,3 @@
+system\management\budget\BudgetPortal.class
+system\management\budget\connections\LoginRegistrationDAOImpl.class
+system\management\budget\valueObjects\UserRegistrationVO.class

@@ -2,6 +2,7 @@ package system.management.budget;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,41 +13,44 @@ import java.text.SimpleDateFormat;
 
 
 public class AddRemoveBankOrSubscription {
-
-	public static void getUserBankDetails(int account_id) {
-		Scanner scanner = new Scanner(System.in);
+	
+	static Scanner scanner = new Scanner(System.in);
+	
+	public static void getUserBankDetails(int account_id, Scanner scanner) {
+		//System.out.println(String.join("", Collections.nCopies(50,"-")));
+		System.out.println("Add a new bank account\n");
 		
 		System.out.print("Enter your IBAN Number: ");
-		String iban = scanner.nextLine();
+		String iban = scanner.next();
 		
-		System.out.print("Enter your Account Balance: € ");
+		System.out.print("\nEnter your Account Balance: € ");
 		float balance = scanner.nextFloat();
 		scanner.close();
 		
 		boolean rtnValue = addBank(account_id, iban, balance);
 
 		if (rtnValue) {
-			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: €"+ balance);
+			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
 		} else {
 			System.out.print("Error adding account.\n");
 		}
 	}
 	
-	public static void getUserSubscriptionDetails(int account_id) {
-		Scanner scanner = new Scanner(System.in); //Can scanner be refactorised to start once for class then close in method?
+	public static void getUserSubscriptionDetails(int account_id, Scanner scanner) {
+		
 		try {
 			System.out.print("Enter the name of the subscription (ie Netflix): ");
-			String subName = scanner.nextLine();
+			String subName = scanner.next();
 			
 			System.out.print("Enter start date in format [DD-MM-YYYY]: "); //Can code be condensed using for-loop and same vars
-			String startDateString = scanner.nextLine();
+			String startDateString = scanner.next();
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date1 = sdf1.parse(startDateString);
 			java.sql.Date startDateSQL = new java.sql.Date(date1.getTime());
 			
 			System.out.print("Enter start end in format [DD-MM-YYYY]: ");
-			String endDateString = scanner.nextLine();
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+			String endDateString = scanner.next();
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date2 = sdf2.parse(endDateString);
 			java.sql.Date endDateSQL = new java.sql.Date(date2.getTime());	
 			
@@ -76,7 +80,7 @@ public class AddRemoveBankOrSubscription {
 				String ibanCheck = rs.getString("iban_num");
 				if (ibanCheck.equals(iban)) {
 					System.out.println("** ERROR: Can't add same acount multiple times **");
-					getUserBankDetails(account_id);
+					getUserBankDetails(account_id, scanner);
 				} else {
 					PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Bank (iban_num,balance,account_id) VALUES (?,?,?)");
 					pStmnt.setString(1, iban);
@@ -112,7 +116,7 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 
-	public static boolean removeBank(int account_id) {
+	public static boolean removeBank(int account_id, Scanner scanner) {
 		
 		System.out.println("Select which account you would like to delete: ");
 		try {
@@ -130,7 +134,7 @@ public class AddRemoveBankOrSubscription {
 				counter++;
 				System.out.print(counter+") " + ibanList.get(i)+"\n");
 			}
-			Scanner scanner = new Scanner(System.in);
+
 			System.out.print("Selection: ");
 			int chooseAccount = scanner.nextInt();
 			
@@ -148,7 +152,7 @@ public class AddRemoveBankOrSubscription {
 				System.out.print("Successfully removed bank account!");
 				return true;
 			} else {
-				removeBank(account_id);
+				removeBank(account_id, scanner);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,7 +160,7 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	public static boolean removeSubscription(int account_id) {
+	public static boolean removeSubscription(int account_id, Scanner scanner) {
 		
 		System.out.println("Select which subscription you would like to delete: ");
 		try {
@@ -174,7 +178,7 @@ public class AddRemoveBankOrSubscription {
 				counter++;
 				System.out.print(counter+") " + subList.get(i)+"\n");
 			}
-			Scanner scanner = new Scanner(System.in);
+			
 			System.out.print("Selection: ");
 			int chooseSubscription = scanner.nextInt();
 			
@@ -192,7 +196,7 @@ public class AddRemoveBankOrSubscription {
 				System.out.print("Successfully removed subscription!");
 				return true;
 			} else {
-				removeSubscription(account_id);
+				removeSubscription(account_id, scanner);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -71,6 +71,15 @@ public class BudgetPortal
 		
 	}
 	
+	private static void userForgotPassword(Scanner scanner, LoginRegistrationDAOImpl con) {
+		System.out.println("Please enter your email address:");
+		String email=scanner.nextLine();
+		System.out.println("What is the last name of the teacher who failed you?:");
+		String answer=scanner.nextLine();
+		
+		con.forgotPasswordDbConnection(email, answer);
+		}
+	
 	private static void viewDashboard(String currentAccountId, String username) {
 
 		DashboardDaoImpl dashboardView = new DashboardDaoImpl();

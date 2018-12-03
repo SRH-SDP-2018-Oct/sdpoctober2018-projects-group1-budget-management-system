@@ -2,20 +2,21 @@ package system.management.budget;
 
 import java.io.Console;
 import java.util.Scanner;
-import system.management.budget.connections.LoginRegistrationDAOImpl;
-import system.management.budget.valueObjects.UserRegistrationVO;
+import system.management.budget.connections.*;
+import system.management.budget.valueObjects.*;
 
-/**
- * Hello world!
- *
- */
+
 public class BudgetPortal 
 {
 	public static void main(String[] args) {
-		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
+		System.out.println("*****  WELCOME TO THE BUDGET MANAGEMENT SYSTEM PORTAL  ***** \n");
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println("To login press 1. or to register as a new user press 2.");
+		System.out.println(" Select your Option ");
+		System.out.println("1 : Login");
+		System.out.println("2 : Register ");
+		System.out.println("3 : Forgot your Password");
+		System.out.println(" ******************** ");
 		
 		String loginRegistrationChoice=scanner.nextLine();
 		LoginRegistrationDAOImpl con = new LoginRegistrationDAOImpl();
@@ -64,13 +65,47 @@ public class BudgetPortal
 		System.out.println("Password is: " + pass);
 		System.out.println("Your username is " + username);
 
-		boolean authentication = con.createConnection(username, pass);
-		System.out.println("User logged in :: " + authentication);
-		viewDashboard();
+		String currentAccountId = con.createConnection(username, pass);
+		System.out.println("User logged in :: " + currentAccountId);
+		viewDashboard(currentAccountId,username);
 		
 	}
 	
-	private static void viewDashboard() {
-		//ToDo: Add dash board specific code here.
+	private static void viewDashboard(String currentAccountId, String username) {
+
+		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
+	
+		System.out.println("Welcome User :  " + username + "\n" );
+		
+		System.out.println(" **********  Menu Options  ********** ");
+		
+		System.out.println("1 : Dashboard");
+		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
+		System.out.println("3 : Expense Tracker");
+		System.out.println("4 : Notifications");
+		System.out.println("5 : Reports");
+		System.out.println("6 : Logout");
+		
+		System.out.println(" ******************** ");
+		Scanner scan = new Scanner(System.in);
+		int choice = scan.nextInt();
+	
+		
+		switch (choice){
+		case 1 :
+					dashboardView.getTransaction(currentAccountId);
+					break;
+					
+		default : System.out.println("Invalid Input");
+		    
+
+		}
+		
+		scan.close();
+		
+	
+		
 	}
+	
+
 }

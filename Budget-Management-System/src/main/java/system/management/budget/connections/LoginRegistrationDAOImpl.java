@@ -11,19 +11,24 @@ import system.management.budget.valueObjects.UserRegistrationVO;
 
 public class LoginRegistrationDAOImpl {
 	//private static final Logger LOGGER = Logger.getLogger(LoginRegistrationDAOImpl.class);
-	public boolean createConnection(String username,String pass){
+	public String createConnection(String username,String pass){
     	try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_sb", "root","root");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root1234");
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM USER_AUTHENTICATION");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Account");
 			while(rs.next()) {
-				String name = rs.getString("email_id");
+				String name = rs.getString("email");
 				if (username.equals(name)) {
 					String password = rs.getString("password");
-					if(pass.equals(password))
-						return true;
+					if(pass.equals(password)) 
+					{	
+						String currentAccountId = rs.getString("account_id");
+						return currentAccountId;
+						
+					}
+						
 				}
 				
 			}
@@ -32,17 +37,17 @@ public class LoginRegistrationDAOImpl {
     	} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		return false;
+		return "login failed";
     }
 	
 	public boolean registrationDbConnection(UserRegistrationVO regClass){
 		boolean registrationResult = false;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root","root");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root1234");
 			
 			//Statement stmt = con.createStatement();
-			PreparedStatement stmt = con.prepareStatement("INSERT INTO USER_REGISTRATION VALUES (?,?,?)");
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO Account VALUES (?,?,?)");
 			//String dbQuery= "INSERT INTO USER_REGISTRATION (firstname,lastname,name) VALUES ('" +regClass.getFirstName()+ "','"+regClass.getLastName()+"','"+regClass.getEmailID()+"');";
 			stmt.setString(1, regClass.getFirstName());
 			stmt.setString(2, regClass.getLastName());

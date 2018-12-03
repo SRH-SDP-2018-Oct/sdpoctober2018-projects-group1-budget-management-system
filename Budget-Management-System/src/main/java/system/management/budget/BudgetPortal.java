@@ -35,6 +35,8 @@ public class BudgetPortal
 		else if(loginRegistrationChoice.equals("2")){
 			userRegistration(con);
 		}
+		else if(loginRegistrationChoice.equals("3"))
+			userForgotPassword(con);
 		else {
 			System.out.println("\nPlease enter a valid number.");
 		}
@@ -103,7 +105,8 @@ public class BudgetPortal
 		}
 	}
 	
-	public static void userForgotPassword(Scanner scanner, LoginRegistrationDAOImpl con) {
+	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
+		Scanner scanner = new Scanner(System.in);
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
 		System.out.println("What is the last name of the teacher who failed you?:");
@@ -133,8 +136,8 @@ public class BudgetPortal
 		System.out.println("6 : Logout");
 		
 		System.out.println(" ******************** ");
-		Scanner scan = new Scanner(System.in);
-		int choice = scan.nextInt();
+		Scanner scanner = new Scanner(System.in);
+		int choice = scanner.nextInt();
 	
 		
 		switch (choice) {
@@ -144,9 +147,9 @@ public class BudgetPortal
 		case 5:
 			// Code for generating custom dynamic jasper report.
 			System.out.println("\nFrom date (yyyy:mm:dd)");
-			String customDateReportGenerationTo = scan.nextLine();
+			String customDateReportGenerationTo = scanner.nextLine();
 			System.out.println("\nFrom date (yyyy:mm:dd)");
-			String customDateReportGenerationFrom = scan.nextLine();
+			String customDateReportGenerationFrom = scanner.nextLine();
 			GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
 			report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
 			break; // Is this redundant?
@@ -158,7 +161,7 @@ public class BudgetPortal
 
 		}
 		
-		scan.close();
+		scanner.close();
 		
 	
 		

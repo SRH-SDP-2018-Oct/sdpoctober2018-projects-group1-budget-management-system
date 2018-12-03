@@ -5,7 +5,6 @@ import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.List;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -14,33 +13,22 @@ import java.text.SimpleDateFormat;
 
 public class AddRemoveBankOrSubscription {
 
-	static Scanner scanner = new Scanner(System.in);
+	static DatabaseConnect db = new DatabaseConnect();
+	static Connection con = db.dbConnect();
 	
-	private static Connection dbConnect(){
-		Connection conFail = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
-			return con;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return conFail;
-	}
-	
-	public static void getUserBankDetails(int account_id, Scanner scanner) {
+	public static void getUserBankDetails(int account_id) {
 		//System.out.println(String.join("", Collections.nCopies(50,"-")));
 		System.out.println("Add a new bank account\n");
+		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("Enter your IBAN Number: ");
 		String iban = scanner.next();
 		
 		System.out.print("\nEnter your Account Balance euros: ");
 		float balance = scanner.nextFloat();
-		scanner.close();
+		//scanner.close();
 		
-		boolean rtnValue = checkIban(account_id, iban, balance);
+		boolean rtnValue = checkIban(account_id, iban, balance, con);
 		if (rtnValue) {
 			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
 		} else {
@@ -48,9 +36,10 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static void getUserSubscriptionDetails(int account_id, Scanner scanner) {
+	public static void getUserSubscriptionDetails(int account_id) {
 		
 		try {
+			Scanner scanner = new Scanner(System.in);
 			System.out.print("Enter the name of the subscription (ie Netflix): ");
 			String subName = scanner.next();
 			
@@ -68,7 +57,7 @@ public class AddRemoveBankOrSubscription {
 			
 			scanner.close();
 
-			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL); //This is duplicated in the addbank function
+			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL, con); //This is duplicated in the addbank function
 			
 			if (rtnValue) {
 				System.out.print("\nSuccesfully added subscription!\nName: "+ subName + "\nFrom: "+ startDateSQL + " to "+ endDateSQL);
@@ -81,25 +70,26 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static boolean checkIban(int account_id, String iban, float balance) {
+	public static boolean checkIban(int account_id, String iban, float balance, Connection con) {
 		try {
-			Connection con = dbConnect();
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery("SELECT * FROM Bank");
+			ResultSet rs = qStmt.executeQuery(db.bankSel);
 			boolean temp = rs.next();
 			
 			if (temp == false) {
 				return addBank(account_id, iban, balance, con);
 			} else {
-				while (temp) {			
+				while (rs.next()) {
 					String ibanCheck = rs.getString("iban_num");
+					System.out.println("********************* DEBUG: "+ibanCheck);
+					System.out.println("********************* DEBUG: "+iban);
 					if (ibanCheck.equals(iban)) {
 						System.out.println("** ERROR: Can't add same acount multiple times **");
-						getUserBankDetails(account_id,scanner);
-					} else {
-						return addBank(account_id, iban, balance, con);
+						
+						getUserBankDetails(account_id);
 					}
 				}
+				return addBank(account_id, iban, balance, con);	
 			}		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,10 +113,8 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 
-	public static boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL) {
+	public static boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL, Connection con) {
 		try {
-			Connection con = dbConnect();
-			
 			PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Subscriptions (subscription_name,subscription_start_date,subscription_end_date,account_id) VALUES (?,?,?,?)");
 			pStmnt.setString(1, subName);
 			pStmnt.setDate(2, startDateSQL);
@@ -141,12 +129,11 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 
-	public static boolean removeBank(int account_id, Scanner scanner) {
+	public static boolean removeBank(int account_id, Connection con) {
 		
 		System.out.println("Select which account you would like to delete: ");
 		try {
-			Connection con = dbConnect();
-			
+			Scanner scanner = new Scanner(System.in);
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery("SELECT * FROM Bank WHERE account_id = "+ account_id);
 			List<String> ibanList = new ArrayList<String>();
@@ -176,7 +163,8 @@ public class AddRemoveBankOrSubscription {
 				System.out.print("Successfully removed bank account!");
 				return true;
 			} else {
-				removeBank(account_id, scanner);
+				scanner.close();
+				removeBank(account_id, con);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,12 +172,11 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	public static boolean removeSubscription(int account_id, Scanner scanner) {
+	public static boolean removeSubscription(int account_id, Connection con) {
 		
 		System.out.println("Select which subscription you would like to delete: ");
 		try {
-			Connection con = dbConnect();
-			
+			Scanner scanner = new Scanner(System.in);
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery("SELECT * FROM Subscriptions WHERE account_id = "+ account_id);
 			List<String> subList = new ArrayList<String>();
@@ -219,7 +206,8 @@ public class AddRemoveBankOrSubscription {
 				System.out.print("Successfully removed subscription!");
 				return true;
 			} else {
-				removeSubscription(account_id, scanner);
+				scanner.close();
+				removeSubscription(account_id, con);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

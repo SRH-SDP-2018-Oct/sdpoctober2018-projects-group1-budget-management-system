@@ -20,11 +20,11 @@ public class BudgetPortal
 		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println(" Select your Option ");
-		System.out.println("1 : Login");
-		System.out.println("2 : Register ");
-		System.out.println("3 : Forgot your Password");
-		System.out.println(" ******************** ");
+		System.out.println("\n Select your Option ");
+		System.out.println("\n1 : Login");
+		System.out.println("\n2 : Register ");
+		System.out.println("\n3 : Forgot your Password");
+		System.out.println("\n ******************** ");
 		
 		String loginRegistrationChoice=scanner.nextLine();
 		LoginRegistrationDAOImpl con = new LoginRegistrationDAOImpl();

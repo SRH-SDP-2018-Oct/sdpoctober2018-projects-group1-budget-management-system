@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
+import system.management.budget.connections.DashboardDaoImpl;
 import system.management.budget.connections.GenarateCustomReportDAOImpl;
 import system.management.budget.connections.LoginRegistrationDAOImpl;
 import system.management.budget.valueObjects.UserRegistrationVO;
@@ -16,6 +17,9 @@ public class BudgetPortal
 	public static void main(String[] args) {
 		
 		clearScreen();
+		proceedToPortal();
+	}
+	public static void proceedToPortal() {
 		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
 		Scanner scanner = new Scanner(System.in);
 		
@@ -39,6 +43,7 @@ public class BudgetPortal
 		}
 		scanner.close();
 	}
+
 	public static void userRegistration(Scanner scanner, LoginRegistrationDAOImpl con) {
 		UserRegistrationVO userDetails = new UserRegistrationVO();
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");

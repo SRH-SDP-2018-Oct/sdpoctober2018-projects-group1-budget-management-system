@@ -5,6 +5,27 @@ public class UserRegistrationVO {
 	private String lastName;
 	private String emailID;
 	private String mobileNumber;
+	private String gender;
+	private String password;
+	private String recoveryAnswer;
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getRecoveryAnswer() {
+		return recoveryAnswer;
+	}
+	public void setRecoveryAnswer(String recoveryAnswer) {
+		this.recoveryAnswer = recoveryAnswer;
+	}
 	public String getFirstName() {
 		return firstName;
 	}

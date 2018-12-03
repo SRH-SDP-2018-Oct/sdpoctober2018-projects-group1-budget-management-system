@@ -1,11 +1,8 @@
 package system.management.budget;
 
 import java.io.Console;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
-import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
+
 import system.management.budget.connections.DashboardDaoImpl;
 import system.management.budget.connections.GenarateCustomReportDAOImpl;
 import system.management.budget.connections.LoginRegistrationDAOImpl;

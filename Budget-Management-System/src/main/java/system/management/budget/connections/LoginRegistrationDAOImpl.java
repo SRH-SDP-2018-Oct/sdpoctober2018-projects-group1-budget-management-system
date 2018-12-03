@@ -15,7 +15,7 @@ public class LoginRegistrationDAOImpl {
 	public String createConnection(String username,String pass){
     	try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root1234");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
 			
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Account");

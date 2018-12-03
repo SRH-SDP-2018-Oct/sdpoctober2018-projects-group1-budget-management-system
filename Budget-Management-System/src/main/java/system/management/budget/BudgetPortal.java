@@ -29,11 +29,11 @@ public class BudgetPortal
 		String loginRegistrationChoice=scanner.nextLine();
 		LoginRegistrationDAOImpl con = new LoginRegistrationDAOImpl();
 		if (loginRegistrationChoice.equals("1")) {
-			userLogin(scanner, con);
+			userLogin(con);
 		}
 		//Registration form:
 		else if(loginRegistrationChoice.equals("2")){
-			userRegistration(scanner, con);
+			userRegistration(con);
 		}
 		else {
 			System.out.println("\nPlease enter a valid number.");
@@ -41,7 +41,8 @@ public class BudgetPortal
 		scanner.close();
 	}
 
-	public static void userRegistration(Scanner scanner, LoginRegistrationDAOImpl con) {
+	public static void userRegistration(LoginRegistrationDAOImpl con) {
+		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
 		//String newLine = System.getProperty("line.separator");
@@ -70,7 +71,8 @@ public class BudgetPortal
 		System.out.println("Registration successful... You may proceed to login.");
 	}
 
-	public static void userLogin(Scanner scanner, LoginRegistrationDAOImpl con) {
+	public static void userLogin(LoginRegistrationDAOImpl con) {
+		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nEnter your Email-ID: ");
 
 		String username = scanner.nextLine();
@@ -85,7 +87,7 @@ public class BudgetPortal
 			pass = String.valueOf(ch);// converting char array into string
 		}
 		else {
-			System.out.println("Hello");
+			//Password input for eclipse console
 			pass = scanner.nextLine();
 		}
 		System.out.println("Password is: " + pass);
@@ -93,8 +95,12 @@ public class BudgetPortal
 
 		String currentAccountId = con.createConnection(username, pass);
 		System.out.println("User logged in :: " + currentAccountId);
-		viewDashboard(currentAccountId,username);//why is this username?
-		
+		if(!currentAccountId.equals("login failed"))
+			viewDashboard(currentAccountId,username);
+		else {
+			System.out.println("Login failed. Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
+			userLogin(con); //Recursive function.
+		}
 	}
 	
 	public static void userForgotPassword(Scanner scanner, LoginRegistrationDAOImpl con) {

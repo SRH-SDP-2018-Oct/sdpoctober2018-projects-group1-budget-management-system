@@ -140,7 +140,8 @@ public class BudgetPortal
 					System.out.println("\nFrom date (yyyy:mm:dd)");
 					String customDateReportGenerationFrom = scanner.nextLine();
 					GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();			
-					report.generateReport(customDateReportGenerationTo,customDateReportGenerationFrom);			
+					report.generateReport(customDateReportGenerationTo,customDateReportGenerationFrom);
+					break;
 					
 		default : System.out.println("Invalid Input");
 		    

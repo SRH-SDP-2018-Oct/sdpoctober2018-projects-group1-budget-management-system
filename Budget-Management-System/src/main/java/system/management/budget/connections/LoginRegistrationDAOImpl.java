@@ -40,18 +40,21 @@ public class LoginRegistrationDAOImpl {
 		return "login failed";
     }
 	
-	public boolean registrationDbConnection(UserRegistrationVO regClass){
+	public boolean registrationDbConnection(UserRegistrationVO userDetails){
 		boolean registrationResult = false;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root1234");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
 			
 			//Statement stmt = con.createStatement();
-			PreparedStatement stmt = con.prepareStatement("INSERT INTO Account VALUES (?,?,?)");
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO ACCOUNT (email,first_name,last_name,sex,password,recovery_answer) VALUES (?,?,?,?,?,?)");
 			//String dbQuery= "INSERT INTO USER_REGISTRATION (firstname,lastname,name) VALUES ('" +regClass.getFirstName()+ "','"+regClass.getLastName()+"','"+regClass.getEmailID()+"');";
-			stmt.setString(1, regClass.getFirstName());
-			stmt.setString(2, regClass.getLastName());
-			stmt.setString(3, regClass.getEmailID());
+			stmt.setString(1, userDetails.getEmailID());
+			stmt.setString(2, userDetails.getFirstName());
+			stmt.setString(3, userDetails.getLastName());
+			stmt.setString(4, userDetails.getGender());
+			stmt.setString(5, userDetails.getPassword());
+			stmt.setString(6, userDetails.getRecoveryAnswer());
 			registrationResult = stmt.execute();
 			stmt.close();
 			System.out.println(registrationResult);

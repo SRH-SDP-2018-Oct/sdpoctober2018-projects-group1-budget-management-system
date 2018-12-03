@@ -40,30 +40,30 @@ public class BudgetPortal
 		scanner.close();
 	}
 	public static void userRegistration(Scanner scanner, LoginRegistrationDAOImpl con) {
-		UserRegistrationVO reg = new UserRegistrationVO();
+		UserRegistrationVO userDetails = new UserRegistrationVO();
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
 		//String newLine = System.getProperty("line.separator");
-		reg.setFirstName(scanner.nextLine());
+		userDetails.setFirstName(scanner.nextLine());
 		System.out.println("\nLAST NAME:");
-		reg.setLastName(scanner.nextLine());
+		userDetails.setLastName(scanner.nextLine());
 		do{
 			System.out.println("\nEMAIL ADDRESS:");
-			reg.setEmailID(scanner.nextLine());
-				if(!reg.getEmailID().contains("@") && !reg.getEmailID().contains("."))
+			userDetails.setEmailID(scanner.nextLine());
+				if(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."))
 					System.out.println("Please enter a valid email address.");
-		}while(!reg.getEmailID().contains("@") && !reg.getEmailID().contains("."));
+		}while(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."));
 		
 		
 		System.out.println("\nGENDER");
-		reg.setGender(scanner.nextLine());
+		userDetails.setGender(scanner.nextLine());
 		System.out.println("\nPASSWORD");
-		reg.setPassword(scanner.nextLine());
+		userDetails.setPassword(scanner.nextLine());
 		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
 				+ "\n\nWHO WAS YOUR FIRST EMPLOYER.");
-		reg.setRecoveryAnswer(scanner.nextLine());
-		System.out.println(reg.getFirstName()+" "+reg.getEmailID()+" "+reg.getLastName()+" "+reg.getGender());
+		userDetails.setRecoveryAnswer(scanner.nextLine());
+		System.out.println(userDetails.getFirstName()+" "+userDetails.getEmailID()+" "+userDetails.getLastName()+" "+userDetails.getGender());
 	
-		con.registrationDbConnection(reg);
+		con.registrationDbConnection(userDetails);
 		
 		System.out.println("Registration successful... You may proceed to login.");
 	}
@@ -129,22 +129,24 @@ public class BudgetPortal
 		int choice = scan.nextInt();
 	
 		
-		switch (choice){
-		case 1 :
-					dashboardView.getTransaction(currentAccountId);
-					break;
-		case 5 :
-					//Code for generating custom dynamic jasper report.
-					System.out.println("\nFrom date (yyyy:mm:dd)");
-					String customDateReportGenerationTo = scan.nextLine();
-					System.out.println("\nFrom date (yyyy:mm:dd)");
-					String customDateReportGenerationFrom = scan.nextLine();
-					GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();			
-					report.generateReport(customDateReportGenerationTo,customDateReportGenerationFrom);
-					break;
-					
-		default : System.out.println("Invalid Input");
-		    
+		switch (choice) {
+		case 1:
+			dashboardView.getTransaction(currentAccountId);
+			break; // Is this redundant?
+		case 5:
+			// Code for generating custom dynamic jasper report.
+			System.out.println("\nFrom date (yyyy:mm:dd)");
+			String customDateReportGenerationTo = scan.nextLine();
+			System.out.println("\nFrom date (yyyy:mm:dd)");
+			String customDateReportGenerationFrom = scan.nextLine();
+			GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
+			report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
+			break; // Is this redundant?
+		case 6:
+			proceedToPortal();
+			break; // Is this redundant?
+		default:
+			System.out.println("Invalid Input");
 
 		}
 		

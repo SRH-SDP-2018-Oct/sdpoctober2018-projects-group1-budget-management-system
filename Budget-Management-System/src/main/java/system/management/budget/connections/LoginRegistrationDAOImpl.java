@@ -60,4 +60,50 @@ public class LoginRegistrationDAOImpl {
 		}
 		return registrationResult;
 	}
+	public void forgotPasswordDbConnection(String email,String recoveryAnswer) {
+		
+		try {
+			String password;
+			String reenteredPassword;
+			Scanner scanner = new Scanner(System.in);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
+			
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT email,recovery_answer FROM ACCOUNT");
+			while(rs.next()){
+				String emailId= rs.getString("email");
+				if(emailId.equals(email)) {
+					String securityAnswer= rs.getString("recovery_answer");
+					if(securityAnswer.equals(recoveryAnswer)) {
+						do {			
+						System.out.println("Please enter your new password:");
+						password=scanner.nextLine();
+						System.out.println("Please reenter your password");
+						reenteredPassword=scanner.nextLine();
+						if(!password.equals(reenteredPassword)) {
+							System.out.println("Your password doesn't match. Please enter again");
+						}
+						}
+						while(!password.equals(reenteredPassword));
+						
+						//PreparedStatement updatestmt= con.prepareStatement("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
+						Statement updatestmt = con.createStatement();
+						updatestmt.execute("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
+						//updatestmt.setString(1,reenteredPassword);
+						//updatestmt.executeQuery();
+						updatestmt.close();
+						
+						scanner.close();
+					
+					}
+				}
+					
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

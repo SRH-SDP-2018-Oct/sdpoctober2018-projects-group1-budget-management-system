@@ -1,15 +1,22 @@
 package system.management.budget;
 
 import java.io.Console;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
-import system.management.budget.connections.*;
-import system.management.budget.valueObjects.*;
+import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
+import system.management.budget.connections.GenarateCustomReportDAOImpl;
+import system.management.budget.connections.LoginRegistrationDAOImpl;
+import system.management.budget.valueObjects.UserRegistrationVO;
 
 
 public class BudgetPortal 
 {
 	public static void main(String[] args) {
-		System.out.println("*****  WELCOME TO THE BUDGET MANAGEMENT SYSTEM PORTAL  ***** \n");
+		
+		clearScreen();
+		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.println(" Select your Option ");
@@ -28,50 +35,67 @@ public class BudgetPortal
 			userRegistration(scanner, con);
 		}
 		else {
-			System.out.println("Please enter a valid number.");
+			System.out.println("\nPlease enter a valid number.");
 		}
 		scanner.close();
 	}
-	private static void userRegistration(Scanner scanner, LoginRegistrationDAOImpl con) {
+	public static void userRegistration(Scanner scanner, LoginRegistrationDAOImpl con) {
 		UserRegistrationVO reg = new UserRegistrationVO();
-		System.out.println("Please provide the below metioned details to register");
-		String newLine = System.getProperty("line.separator");
-		
-		System.out.println(newLine+"FIRST NAME:");
+		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
+		//String newLine = System.getProperty("line.separator");
 		reg.setFirstName(scanner.nextLine());
-		System.out.println(newLine+"LAST NAME:");
+		System.out.println("\nLAST NAME:");
 		reg.setLastName(scanner.nextLine());
-		System.out.println(newLine+"EMAIL ADDDRESS:");
-		reg.setEmailID(scanner.nextLine());
-		System.out.println(newLine+"MOBILE NUMBER");
-		reg.setMobileNumber(scanner.nextLine());
-		System.out.println(reg.getFirstName()+" "+reg.getEmailID()+" "+reg.getLastName()+" "+reg.getMobileNumber());
+		do{
+			System.out.println("\nEMAIL ADDRESS:");
+			reg.setEmailID(scanner.nextLine());
+				if(!reg.getEmailID().contains("@") && !reg.getEmailID().contains("."))
+					System.out.println("Please enter a valid email address.");
+		}while(!reg.getEmailID().contains("@") && !reg.getEmailID().contains("."));
+		
+		
+		System.out.println("\nGENDER");
+		reg.setGender(scanner.nextLine());
+		System.out.println("\nPASSWORD");
+		reg.setPassword(scanner.nextLine());
+		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
+				+ "\n\nWHO WAS YOUR FIRST EMPLOYER.");
+		reg.setRecoveryAnswer(scanner.nextLine());
+		System.out.println(reg.getFirstName()+" "+reg.getEmailID()+" "+reg.getLastName()+" "+reg.getGender());
 	
 		con.registrationDbConnection(reg);
 		
 		System.out.println("Registration successful... You may proceed to login.");
 	}
 
-	private static void userLogin(Scanner scanner, LoginRegistrationDAOImpl con) {
-		System.out.println("Enter your username: ");
+	public static void userLogin(Scanner scanner, LoginRegistrationDAOImpl con) {
+		System.out.println("\nEnter your Email-ID: ");
 
 		String username = scanner.nextLine();
 		// scanner.close();
 
 		Console c = System.console();
-		System.out.println("Enter password: ");
-		char[] ch = c.readPassword();
-		String pass = String.valueOf(ch);// converting char array into string
+		String pass;
+		System.out.println("\nEnter password: ");
+		if(c!=null) {
+			
+			char[] ch = c.readPassword();
+			pass = String.valueOf(ch);// converting char array into string
+		}
+		else {
+			System.out.println("Hello");
+			pass = scanner.nextLine();
+		}
 		System.out.println("Password is: " + pass);
 		System.out.println("Your username is " + username);
 
 		String currentAccountId = con.createConnection(username, pass);
 		System.out.println("User logged in :: " + currentAccountId);
-		viewDashboard(currentAccountId,username);
+		viewDashboard(currentAccountId,username);//why is this username?
 		
 	}
 	
-	private static void userForgotPassword(Scanner scanner, LoginRegistrationDAOImpl con) {
+	public static void userForgotPassword(Scanner scanner, LoginRegistrationDAOImpl con) {
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
 		System.out.println("What is the last name of the teacher who failed you?:");
@@ -80,7 +104,12 @@ public class BudgetPortal
 		con.forgotPasswordDbConnection(email, answer);
 		}
 	
-	private static void viewDashboard(String currentAccountId, String username) {
+		private static void clearScreen() {  
+	    System.out.print("\033[H\033[2J");  
+	    System.out.flush();  
+	}
+	
+	public static void viewDashboard(String currentAccountId, String username) {
 
 		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
 	

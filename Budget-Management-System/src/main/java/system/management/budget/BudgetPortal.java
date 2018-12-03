@@ -133,6 +133,14 @@ public class BudgetPortal
 		case 1 :
 					dashboardView.getTransaction(currentAccountId);
 					break;
+		case 5 :
+					//Code for generating custom dynamic jasper report.
+					System.out.println("\nFrom date (yyyy:mm:dd)");
+					String customDateReportGenerationTo = scanner.nextLine();
+					System.out.println("\nFrom date (yyyy:mm:dd)");
+					String customDateReportGenerationFrom = scanner.nextLine();
+					GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();			
+					report.generateReport(customDateReportGenerationTo,customDateReportGenerationFrom);			
 					
 		default : System.out.println("Invalid Input");
 		    

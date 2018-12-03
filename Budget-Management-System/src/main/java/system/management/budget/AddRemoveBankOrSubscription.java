@@ -13,8 +13,21 @@ import java.text.SimpleDateFormat;
 
 
 public class AddRemoveBankOrSubscription {
-	
+
 	static Scanner scanner = new Scanner(System.in);
+	
+	private static Connection dbConnect(){
+		Connection conFail = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
+			return con;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return conFail;
+	}
 	
 	public static void getUserBankDetails(int account_id, Scanner scanner) {
 		//System.out.println(String.join("", Collections.nCopies(50,"-")));
@@ -23,12 +36,11 @@ public class AddRemoveBankOrSubscription {
 		System.out.print("Enter your IBAN Number: ");
 		String iban = scanner.next();
 		
-		System.out.print("\nEnter your Account Balance: € ");
+		System.out.print("\nEnter your Account Balance euros: ");
 		float balance = scanner.nextFloat();
 		scanner.close();
 		
-		boolean rtnValue = addBank(account_id, iban, balance);
-
+		boolean rtnValue = checkIban(account_id, iban, balance);
 		if (rtnValue) {
 			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
 		} else {
@@ -69,29 +81,43 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static boolean addBank(int account_id, String iban, float balance) {
+	public static boolean checkIban(int account_id, String iban, float balance) {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
-			
+			Connection con = dbConnect();
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery("SELECT * FROM Bank");
-			while (rs.next()) {
-				String ibanCheck = rs.getString("iban_num");
-				if (ibanCheck.equals(iban)) {
-					System.out.println("** ERROR: Can't add same acount multiple times **");
-					getUserBankDetails(account_id, scanner);
-				} else {
-					PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Bank (iban_num,balance,account_id) VALUES (?,?,?)");
-					pStmnt.setString(1, iban);
-					pStmnt.setFloat(2, balance);
-					pStmnt.setInt(3, account_id);
-					pStmnt.execute();
-					pStmnt.close();
-					return true;
+			boolean temp = rs.next();
+			
+			if (temp == false) {
+				return addBank(account_id, iban, balance, con);
+			} else {
+				while (temp) {			
+					String ibanCheck = rs.getString("iban_num");
+					if (ibanCheck.equals(iban)) {
+						System.out.println("** ERROR: Can't add same acount multiple times **");
+						getUserBankDetails(account_id,scanner);
+					} else {
+						return addBank(account_id, iban, balance, con);
+					}
 				}
-			}
+			}		
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private static boolean addBank(int account_id, String iban, float balance, Connection con) {
+		try {
+			PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Bank (iban_num,balance,account_id) VALUES (?,?,?)");
+			pStmnt.setString(1, iban);
+			pStmnt.setFloat(2, balance);
+			pStmnt.setInt(3, account_id);
+			pStmnt.execute();
+			pStmnt.close();
+			return true;
+		}
+		catch (Exception e){
 			e.printStackTrace();
 		}
 		return false;
@@ -99,8 +125,7 @@ public class AddRemoveBankOrSubscription {
 
 	public static boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL) {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
+			Connection con = dbConnect();
 			
 			PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Subscriptions (subscription_name,subscription_start_date,subscription_end_date,account_id) VALUES (?,?,?,?)");
 			pStmnt.setString(1, subName);
@@ -120,8 +145,7 @@ public class AddRemoveBankOrSubscription {
 		
 		System.out.println("Select which account you would like to delete: ");
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
+			Connection con = dbConnect();
 			
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery("SELECT * FROM Bank WHERE account_id = "+ account_id);
@@ -140,7 +164,7 @@ public class AddRemoveBankOrSubscription {
 			
 			String accountToDelete = ibanList.get(chooseAccount-1);
 			
-			System.out.print("Are you sure you want to delete the account with IBAN: \n" + accountToDelete +" (Y or N): ");
+			System.out.print("Are you sure you want to delete the account with IBAN: " + accountToDelete +"\n(Y or N): ");
 			String confirmation = scanner.next();
 			
 			if (confirmation.equals("Y") || confirmation.equals("y")) {
@@ -164,8 +188,7 @@ public class AddRemoveBankOrSubscription {
 		
 		System.out.println("Select which subscription you would like to delete: ");
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
+			Connection con = dbConnect();
 			
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery("SELECT * FROM Subscriptions WHERE account_id = "+ account_id);

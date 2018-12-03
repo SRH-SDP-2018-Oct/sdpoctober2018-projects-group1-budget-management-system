@@ -22,7 +22,7 @@ public class DashboardDaoImpl {
 		
 		
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_schema", "root","root1234");
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_schema", "root","root");
 		Statement s = con.createStatement();
 		s.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'");
 		ResultSet rs = s.getResultSet();

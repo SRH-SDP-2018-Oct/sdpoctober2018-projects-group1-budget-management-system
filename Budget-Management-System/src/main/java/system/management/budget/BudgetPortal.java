@@ -136,9 +136,9 @@ public class BudgetPortal
 		case 5 :
 					//Code for generating custom dynamic jasper report.
 					System.out.println("\nFrom date (yyyy:mm:dd)");
-					String customDateReportGenerationTo = scanner.nextLine();
+					String customDateReportGenerationTo = scan.nextLine();
 					System.out.println("\nFrom date (yyyy:mm:dd)");
-					String customDateReportGenerationFrom = scanner.nextLine();
+					String customDateReportGenerationFrom = scan.nextLine();
 					GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();			
 					report.generateReport(customDateReportGenerationTo,customDateReportGenerationFrom);
 					break;

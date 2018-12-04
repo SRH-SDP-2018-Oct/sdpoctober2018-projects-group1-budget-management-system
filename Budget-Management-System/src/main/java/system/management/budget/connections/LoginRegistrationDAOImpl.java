@@ -12,10 +12,10 @@ import system.management.budget.valueObjects.UserRegistrationVO;
 
 public class LoginRegistrationDAOImpl {
 	//private static final Logger LOGGER = Logger.getLogger(LoginRegistrationDAOImpl.class);
-	public String createConnection(String username,String pass){
+	public int createConnection(String username,String pass){
     	try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
 			
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Account");
@@ -25,7 +25,7 @@ public class LoginRegistrationDAOImpl {
 					String password = rs.getString("password");
 					if(pass.equals(password)) 
 					{	
-						String currentAccountId = rs.getString("account_id");
+						int currentAccountId = rs.getInt("account_id");
 						return currentAccountId;
 						
 					}
@@ -38,17 +38,17 @@ public class LoginRegistrationDAOImpl {
     	} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		return "login failed";
+		return 0;
     }
 	
 	public boolean registrationDbConnection(UserRegistrationVO userDetails){
 		boolean registrationResult = false;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
 			
 			//Statement stmt = con.createStatement();
-			PreparedStatement stmt = con.prepareStatement("INSERT INTO ACCOUNT (email,first_name,last_name,sex,password,recovery_answer) VALUES (?,?,?,?,?,?)");
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO Account (email,first_name,last_name,sex,password,recovery_answer) VALUES (?,?,?,?,?,?)");
 			//String dbQuery= "INSERT INTO USER_REGISTRATION (firstname,lastname,name) VALUES ('" +regClass.getFirstName()+ "','"+regClass.getLastName()+"','"+regClass.getEmailID()+"');";
 			stmt.setString(1, userDetails.getEmailID());
 			stmt.setString(2, userDetails.getFirstName());
@@ -71,10 +71,10 @@ public class LoginRegistrationDAOImpl {
 			String reenteredPassword;
 			Scanner scanner = new Scanner(System.in);
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT email,recovery_answer FROM ACCOUNT");
+			ResultSet rs = stmt.executeQuery("SELECT email,recovery_answer FROM Account");
 			while(rs.next()){
 				String emailId= rs.getString("email");
 				if(emailId.equals(email)) {
@@ -93,7 +93,7 @@ public class LoginRegistrationDAOImpl {
 						
 						//PreparedStatement updatestmt= con.prepareStatement("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
 						Statement updatestmt = con.createStatement();
-						updatestmt.execute("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
+						updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
 						//updatestmt.setString(1,reenteredPassword);
 						//updatestmt.executeQuery();
 						updatestmt.close();

@@ -15,7 +15,7 @@ import system.management.budget.valueObjects.DashboardVO;
 
 public class DashboardDaoImpl {
 
-	public boolean getTransaction(String currentAccountId) {
+	public boolean getTransaction(int currentAccountId) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
 	try {
@@ -40,8 +40,6 @@ public class DashboardDaoImpl {
 	}catch(Exception e) {
 		System.out.println("Error" + e);
 	}
-	
-	
 			return false;
 	
     

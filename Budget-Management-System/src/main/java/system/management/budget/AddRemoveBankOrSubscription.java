@@ -8,25 +8,62 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;  
+import java.text.SimpleDateFormat;
+import system.management.budget.connections.*;
 
 
 public class AddRemoveBankOrSubscription {
 
 	static DatabaseConnect db = new DatabaseConnect();
 	static Connection con = db.dbConnect();
+	static BudgetPortal bp = new BudgetPortal();
+	
+	public static void menu(int account_id) {
+		System.out.println(" **********  Menu Options  ********** ");
+		System.out.println(" 1 : Add Bank Account				  ");
+		System.out.println(" 2 : Add Subscription				  ");
+		System.out.println(" 3 : Delete Bank Account		  	  ");
+		System.out.println(" 4 : Delete Subscription			  ");
+		System.out.println(" 5 : Previous	 					  ");
+		System.out.println(" ************************************ ");
+		Scanner scan = new Scanner(System.in);
+		int choice = scan.nextInt();
+	
+		switch (choice){
+		case 1 :
+			getUserBankDetails(account_id);
+			break;
+		case 2:
+			getUserSubscriptionDetails(account_id);
+			break;
+		case 3:
+			removeBank(account_id, con);
+			break;
+		case 4:
+			removeSubscription(account_id, con);
+			break;
+		case 5:
+			//Need the other method in budget portal to be public
+			break;
+					
+		default : System.out.println("Invalid Input");
+		}
+		scan.close();
+	}
 	
 	public static void getUserBankDetails(int account_id) {
+		
 		//System.out.println(String.join("", Collections.nCopies(50,"-")));
 		System.out.println("Add a new bank account\n");
 		Scanner scanner = new Scanner(System.in);
+		
 		
 		System.out.print("Enter your IBAN Number: ");
 		String iban = scanner.next();
 		
 		System.out.print("\nEnter your Account Balance euros: ");
 		float balance = scanner.nextFloat();
-		//scanner.close();
+		scanner.close();
 		
 		boolean rtnValue = checkIban(account_id, iban, balance, con);
 		if (rtnValue) {
@@ -81,12 +118,9 @@ public class AddRemoveBankOrSubscription {
 			} else {
 				while (rs.next()) {
 					String ibanCheck = rs.getString("iban_num");
-					System.out.println("********************* DEBUG: "+ibanCheck);
-					System.out.println("********************* DEBUG: "+iban);
 					if (ibanCheck.equals(iban)) {
 						System.out.println("** ERROR: Can't add same acount multiple times **");
-						
-						getUserBankDetails(account_id);
+						return false; //Point to another method ideally.
 					}
 				}
 				return addBank(account_id, iban, balance, con);	
@@ -99,7 +133,7 @@ public class AddRemoveBankOrSubscription {
 	
 	private static boolean addBank(int account_id, String iban, float balance, Connection con) {
 		try {
-			PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Bank (iban_num,balance,account_id) VALUES (?,?,?)");
+			PreparedStatement pStmnt = con.prepareStatement(db.bankAdd);
 			pStmnt.setString(1, iban);
 			pStmnt.setFloat(2, balance);
 			pStmnt.setInt(3, account_id);
@@ -115,7 +149,7 @@ public class AddRemoveBankOrSubscription {
 
 	public static boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL, Connection con) {
 		try {
-			PreparedStatement pStmnt = con.prepareStatement("INSERT INTO Subscriptions (subscription_name,subscription_start_date,subscription_end_date,account_id) VALUES (?,?,?,?)");
+			PreparedStatement pStmnt = con.prepareStatement(db.subAdd);
 			pStmnt.setString(1, subName);
 			pStmnt.setDate(2, startDateSQL);
 			pStmnt.setDate(3, endDateSQL);
@@ -135,7 +169,7 @@ public class AddRemoveBankOrSubscription {
 		try {
 			Scanner scanner = new Scanner(System.in);
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery("SELECT * FROM Bank WHERE account_id = "+ account_id);
+			ResultSet rs = qStmt.executeQuery(db.bankCheck + account_id);
 			List<String> ibanList = new ArrayList<String>();
 			while (rs.next()) {
 				ibanList.add(rs.getString("iban_num"));
@@ -155,7 +189,7 @@ public class AddRemoveBankOrSubscription {
 			String confirmation = scanner.next();
 			
 			if (confirmation.equals("Y") || confirmation.equals("y")) {
-				PreparedStatement pStmnt = con.prepareStatement("DELETE FROM BMS_Schema.Bank WHERE account_id = (?) AND iban_num = (?)");
+				PreparedStatement pStmnt = con.prepareStatement(db.bankDel);
 				pStmnt.setInt(1, account_id);
 				pStmnt.setString(2, accountToDelete);
 				pStmnt.execute();
@@ -164,7 +198,7 @@ public class AddRemoveBankOrSubscription {
 				return true;
 			} else {
 				scanner.close();
-				removeBank(account_id, con);
+				return false; //Point to another method ideally.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,7 +212,7 @@ public class AddRemoveBankOrSubscription {
 		try {
 			Scanner scanner = new Scanner(System.in);
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery("SELECT * FROM Subscriptions WHERE account_id = "+ account_id);
+			ResultSet rs = qStmt.executeQuery(db.subCheck + account_id);
 			List<String> subList = new ArrayList<String>();
 			while (rs.next()) {
 				subList.add(rs.getString("subscription_name"));
@@ -198,7 +232,7 @@ public class AddRemoveBankOrSubscription {
 			String confirmation = scanner.next();
 			
 			if (confirmation.equals("Y") || confirmation.equals("y")) {
-				PreparedStatement pStmnt = con.prepareStatement("DELETE FROM BMS_Schema.Subscriptions WHERE account_id = (?) AND subscription_name = (?)");
+				PreparedStatement pStmnt = con.prepareStatement(db.subDel);
 				pStmnt.setInt(1, account_id);
 				pStmnt.setString(2, subscriptionToDelete);
 				pStmnt.execute();
@@ -207,7 +241,7 @@ public class AddRemoveBankOrSubscription {
 				return true;
 			} else {
 				scanner.close();
-				removeSubscription(account_id, con);
+				return false; //Point to another method ideally.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

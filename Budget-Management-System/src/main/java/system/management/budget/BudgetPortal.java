@@ -95,9 +95,9 @@ public class BudgetPortal
 		System.out.println("Password is: " + pass);
 		System.out.println("Your username is " + username);
 
-		String currentAccountId = con.createConnection(username, pass);
+		int currentAccountId = con.createConnection(username, pass);
 		System.out.println("User logged in :: " + currentAccountId);
-		if(!currentAccountId.equals("login failed"))
+		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {
 			System.out.println("Login failed. Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
@@ -120,7 +120,7 @@ public class BudgetPortal
 	    System.out.flush();  
 	}
 	
-	public static void viewDashboard(String currentAccountId, String username) {
+	public static void viewDashboard(int currentAccountId, String username) {
 
 		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
 	
@@ -144,6 +144,10 @@ public class BudgetPortal
 		case 1:
 			dashboardView.getTransaction(currentAccountId);
 			break; // Is this redundant?
+		case 2:
+			AddRemoveBankOrSubscription.menu(currentAccountId);
+			break;
+			
 		case 5:
 			// Code for generating custom dynamic jasper report.
 			System.out.println("\nFrom date (yyyy:mm:dd)");
@@ -158,7 +162,6 @@ public class BudgetPortal
 			break; // Is this redundant?
 		default:
 			System.out.println("Invalid Input");
-
 		}
 		
 		scanner.close();

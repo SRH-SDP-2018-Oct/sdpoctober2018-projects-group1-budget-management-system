@@ -7,16 +7,19 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
+
 import org.apache.log4j.Logger;
 import system.management.budget.valueObjects.UserRegistrationVO;
 
+
 public class LoginRegistrationDAOImpl {
-	//private static final Logger LOGGER = Logger.getLogger(LoginRegistrationDAOImpl.class);
+	static DatabaseConnect db = new DatabaseConnect();
+	static Connection con = db.dbConnect();
+	
 	public int createConnection(String username,String pass){
+		
     	try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
-			
+    		
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Account");
 			while(rs.next()) {
@@ -42,27 +45,25 @@ public class LoginRegistrationDAOImpl {
     }
 	
 	public boolean registrationDbConnection(UserRegistrationVO userDetails){
-		boolean registrationResult = false;
+
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
 			
-			//Statement stmt = con.createStatement();
-			PreparedStatement stmt = con.prepareStatement("INSERT INTO Account (email,first_name,last_name,sex,password,recovery_answer) VALUES (?,?,?,?,?,?)");
-			//String dbQuery= "INSERT INTO USER_REGISTRATION (firstname,lastname,name) VALUES ('" +regClass.getFirstName()+ "','"+regClass.getLastName()+"','"+regClass.getEmailID()+"');";
+			PreparedStatement stmt = con.prepareStatement(db.accountAdd);
 			stmt.setString(1, userDetails.getEmailID());
 			stmt.setString(2, userDetails.getFirstName());
 			stmt.setString(3, userDetails.getLastName());
 			stmt.setString(4, userDetails.getGender());
 			stmt.setString(5, userDetails.getPassword());
 			stmt.setString(6, userDetails.getRecoveryAnswer());
-			registrationResult = stmt.execute();
+			stmt.execute();
 			stmt.close();
-			System.out.println(registrationResult);
+			return true;
+			
+			//System.out.println(registrationResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return registrationResult;
+		return false;
 	}
 	public void forgotPasswordDbConnection(String email,String recoveryAnswer) {
 		

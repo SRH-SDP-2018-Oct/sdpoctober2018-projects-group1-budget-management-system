@@ -14,6 +14,7 @@ public class DatabaseConnect {
 		//Insert queries
 		public String bankAdd = "INSERT INTO Bank (iban_num,balance,account_id) VALUES (?,?,?)";
 		public String subAdd = "INSERT INTO Subscriptions (subscription_name,subscription_start_date,subscription_end_date,account_id) VALUES (?,?,?,?)";
+		public String accountAdd = "INSERT INTO Account (email,first_name,last_name,sex,password,recovery_answer) VALUES (?,?,?,?,?,?)";
 		
 		//Delete queries
 		public String bankDel = "DELETE FROM BMS_Schema.Bank WHERE account_id = (?) AND iban_num = (?)";

@@ -8,7 +8,7 @@ public class DashboardVO {
 	private int category_id;
 	private int transaction_id;
 	private String transaction_name;
-	private float transaction_amount;
+	private double transaction_amount;
 	private String merchant_name;
 	private java.util.Date transaction_date;
 	private String transaction_time;
@@ -16,7 +16,7 @@ public class DashboardVO {
 	private String currency;
 	private String iban;
 	
-	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String transaction_type,Float transaction_amount,String currency )
+	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String transaction_type,Double transaction_amount,String currency )
 	{
 	    this.transaction_time = transaction_time;
 	    this.transaction_date = transaction_date;
@@ -77,7 +77,7 @@ public class DashboardVO {
 	public void setTransaction_name(String transaction_name) {
 		this.transaction_name = transaction_name;
 	}
-	public float getTransaction_amount() {
+	public double getTransaction_amount() {
 		return transaction_amount;
 	}
 	public void setTransaction_amount(float transaction_amount) {

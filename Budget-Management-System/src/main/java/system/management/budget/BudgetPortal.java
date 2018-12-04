@@ -103,6 +103,7 @@ public class BudgetPortal
 			System.out.println("Login failed. Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
 			userLogin(con); //Recursive function.
 		}
+		scanner.close();
 	}
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
@@ -113,6 +114,7 @@ public class BudgetPortal
 		String answer=scanner.nextLine();
 		
 		con.forgotPasswordDbConnection(email, answer);
+		scanner.close();
 		}
 	
 		private static void clearScreen() {  
@@ -142,8 +144,31 @@ public class BudgetPortal
 		
 		switch (choice) {
 		case 1:
-			dashboardView.getTransaction(currentAccountId);
-			break; // Is this redundant?
+			System.out.println("Please Select the Type of Display" );
+			System.out.println("1 : Display All");
+			System.out.println("2: Display by Month");
+			Scanner scan_1 = new Scanner(System.in);
+			int display_type = scan_1.nextInt();
+			switch (display_type) {
+			case 1 : dashboardView.getCurrentBalance(currentAccountId);
+					 dashboardView.getTransaction(currentAccountId);
+					 break;
+			case 2 : System.out.println("Please Select a Month");
+					 Scanner scan_month = new Scanner(System.in);
+					 int MonthSelected = scan_month.nextInt();
+					 System.out.println("Please Select a Year");
+					 Scanner scan_year = new Scanner (System.in);
+					 int YearSelected = scan_year.nextInt();
+					 dashboardView.getCurrentBalance(currentAccountId);
+					 dashboardView.getTransaction(currentAccountId, MonthSelected, YearSelected);
+					 
+					 break;
+			default : System.out.println("Invalid Input");
+			
+			}
+			scan_1.close();
+			
+			break;
 		case 2:
 			AddRemoveBankOrSubscription.menu(currentAccountId);
 			break;

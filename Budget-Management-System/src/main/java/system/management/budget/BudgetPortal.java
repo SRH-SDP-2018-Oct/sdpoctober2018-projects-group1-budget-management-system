@@ -7,6 +7,7 @@ import system.management.budget.connections.DashboardDaoImpl;
 import system.management.budget.connections.GenarateCustomReportDAOImpl;
 import system.management.budget.connections.LoginRegistrationDAOImpl;
 import system.management.budget.valueObjects.UserRegistrationVO;
+import system.management.budget.connections.*;
 
 
 public class BudgetPortal 
@@ -170,7 +171,11 @@ public class BudgetPortal
 			
 			break;
 		case 2:
-			AddRemoveBankOrSubscription.menu(currentAccountId);
+			AddRemoveBankOrSubscription.menu(currentAccountId,username);
+			break;
+		case 4:
+			System.out.println("Notifications \n");
+			NotificationsDAOImpl.getNotifications(currentAccountId);
 			break;
 			
 		case 5:

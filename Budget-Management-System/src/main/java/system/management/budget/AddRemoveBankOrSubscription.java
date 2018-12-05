@@ -44,7 +44,9 @@ public class AddRemoveBankOrSubscription {
 			BudgetPortal.viewDashboard(account_id,username);
 			break;
 					
-		default : System.out.println("Invalid Input");
+		default : 
+			System.out.println("Invalid Input");
+			menu(account_id, username);
 		}
 		scan.close();
 	}
@@ -56,10 +58,13 @@ public class AddRemoveBankOrSubscription {
 		System.out.print("Enter your IBAN Number: ");
 		String iban = scanner.next();
 		
+		System.out.print("Enter your bank name: ");
+		String bank_name = scanner.next();
+		
 		System.out.print("\nEnter your Account Balance euros: ");
 		float balance = scanner.nextFloat();
 		
-		boolean rtnValue = checkIban(account_id, iban, balance);
+		boolean rtnValue = checkIban(account_id, iban, balance, bank_name);
 		if (rtnValue) {
 			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
 			BudgetPortal.viewDashboard(account_id, username);
@@ -77,7 +82,7 @@ public class AddRemoveBankOrSubscription {
 			System.out.print("Enter the name of the subscription (ie Netflix): ");
 			String subName = scanner.next();
 			
-			System.out.print("Enter start date in format [DD-MM-YYYY]: "); //Can code be condensed using for-loop and same vars
+			System.out.print("Enter start date in format [DD-MM-YYYY]: ");	
 			String startDateString = scanner.next();
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date1 = sdf1.parse(startDateString);
@@ -103,14 +108,14 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static boolean checkIban(int account_id, String iban, float balance) {
+	public static boolean checkIban(int account_id, String iban, float balance, String bank_name) {
 		try {
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery(db.bankSel);
 			boolean temp = rs.next();
 			
 			if (temp == false) {
-				return addBank(account_id, iban, balance);
+				return addBank(account_id, iban, balance, bank_name);
 			} else {
 				rs.beforeFirst();
 				while (rs.next()) {
@@ -120,7 +125,7 @@ public class AddRemoveBankOrSubscription {
 						return false;
 					}
 				}
-				return addBank(account_id, iban, balance);	
+				return addBank(account_id, iban, balance, bank_name);	
 			}		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,12 +133,13 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	private static boolean addBank(int account_id, String iban, float balance) {
+	private static boolean addBank(int account_id, String iban, float balance, String bank_name) {
 		try {
 			PreparedStatement pStmnt = con.prepareStatement(db.bankAdd);
 			pStmnt.setString(1, iban);
 			pStmnt.setFloat(2, balance);
 			pStmnt.setInt(3, account_id);
+			pStmnt.setString(4, bank_name);
 			pStmnt.execute();
 			pStmnt.close();
 			return true;
@@ -198,9 +204,11 @@ public class AddRemoveBankOrSubscription {
 	private static boolean listGenerator(ResultSet rs, boolean bank, int account_id, String username) {
 		try {
 			List<String> tempList = new ArrayList<String>();
+			List<String> bankNameList = new ArrayList<String>();
 			while (rs.next()) {
 				if (bank == true) {
 					tempList.add(rs.getString("iban_num"));
+					bankNameList.add(rs.getString("bank_name"));
 				} else {
 					tempList.add(rs.getString("subscription_name"));
 				}
@@ -208,7 +216,10 @@ public class AddRemoveBankOrSubscription {
 			int counter = 0;
 			for (int i=0; i<  tempList.size(); i++ ) {
 				counter++;
-				System.out.print(counter+") " + tempList.get(i)+"\n");
+				System.out.print(counter+") " + tempList.get(i)+" - ");
+				if (bank == true) {
+					System.out.print(bankNameList.get(i)+"\n");
+				}
 			if (counter == tempList.size()) {
 				System.out.print((counter+1)+") Back to Menu\n");
 				}

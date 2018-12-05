@@ -25,14 +25,15 @@ public class DashboardVO {
 	    this.transaction_type = transaction_type;
 	    this.transaction_amount = transaction_amount;
 	    this.currency = currency;
-//        System.out.println(dataFromQuery.getString("transaction_time"));
-//        System.out.println(dataFromQuery.getString("transaction_date"));
-//        System.out.println(dataFromQuery.getString("iban_num"));
-//        System.out.println(dataFromQuery.getString("transaction_name"));
-//        System.out.println(dataFromQuery.getString("merchant_name"));
-//        System.out.println(dataFromQuery.getString("transaction_type"));
-//        System.out.println(dataFromQuery.getString("transaction_amount"));
-//        System.out.println(dataFromQuery.getString("currency"));
+	}
+	
+	public DashboardVO(Date transaction_date, String transaction_name, double transaction_amount, String currency)
+	{
+		this.transaction_date = transaction_date;
+		this.transaction_name = transaction_name;
+		this.transaction_amount = transaction_amount;
+	    this.currency = currency;
+		
 	}
 	
 	public String getIban() {

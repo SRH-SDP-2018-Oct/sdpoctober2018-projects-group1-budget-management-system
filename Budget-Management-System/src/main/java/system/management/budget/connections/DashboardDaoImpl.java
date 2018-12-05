@@ -14,37 +14,31 @@ import org.apache.log4j.Logger;
 import system.management.budget.valueObjects.*;
 
 public class DashboardDaoImpl {
-
+	
+	static DatabaseConnect db = new DatabaseConnect();
+	static Connection con = db.dbConnect();
+	
 	public boolean getTransaction(int currentAccountId ) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
-	try {
-		
-		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_schema", "root","root1234");
-		Statement s = con.createStatement();
-		s.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'");
-		ResultSet rs = s.getResultSet();
-		
+		try {
+			Statement qStmt = con.createStatement();
+			qStmt.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'");
+			ResultSet rs = qStmt.getResultSet();
 		
 			while(rs.next()) 
 			{
 				trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
-				foundTransactions.add(trans_row);
-				
+				foundTransactions.add(trans_row);	
 			}
 		
-		return showTransactions(foundTransactions);
+			return showTransactions(foundTransactions);
 		
-	}catch(Exception e) {
-		System.out.println("Error" + e);
-	}
-	
-	
-			return false;
-	
-    
+		}catch(Exception e) {
+			System.out.println("Error" + e);
+		}
+		
+	return false;
 	}
 	
 	
@@ -60,100 +54,75 @@ public class DashboardDaoImpl {
 						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),foundTransactions.get(i).getCurrency()  );
 		        System.out.println();
 				System.out.println("----------------------------------------------------------------------------------------------------------");
-//		    	System.out.println("Row " + i +" : " + foundTransactions.get(i).getTransaction_time() + "/" + foundTransactions.get(i).getTransaction_date() + "/" + foundTransactions.get(i).getTransaction_name() + "/" + foundTransactions.get(i).getMerchant_name() + "/" + foundTransactions.get(i).getTransaction_type() + "/" + foundTransactions.get(i).getTransaction_amount() + "/" + foundTransactions.get(i).getCurrency());
 			}
 			System.out.println("----------------------------------------------------------------------------------------------------------");
 
 		}
-	
 		catch(Exception e) {
-			
-			System.out.println("Error" + e);
-			
+			System.out.println("Error" + e);	
 		}
-	return false;
-		
+	return false;	
 	}
 	
 	public boolean getCurrentBalance(int currentAccountId) {
 		BankVO balance_row;
 		List <BankVO> foundBalances = new ArrayList<BankVO>();
-	try {
+			try {
+					Statement qStmt = con.createStatement();
+					qStmt.execute("Select iban_num, balance FROM Bank WHERE account_id='"+ currentAccountId +"'");
+					ResultSet rs = qStmt.getResultSet();
 		
+					while(rs.next()) 
+					{
+						balance_row = new BankVO(rs.getString("iban_num"),rs.getFloat("balance"));
+						foundBalances.add(balance_row);
+					}
+					
+				return showCurrentBalance(foundBalances);
 		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_schema", "root","root1234");
-		Statement s = con.createStatement();
-		s.execute("Select iban_num, balance FROM Bank WHERE account_id='"+ currentAccountId +"'");
-		ResultSet rs = s.getResultSet();
-		
-		
-			while(rs.next()) 
-			{
-				balance_row = new BankVO(rs.getString("iban_num"),rs.getFloat("balance"));
-				foundBalances.add(balance_row);
-				
+			}catch(Exception e) {
+				System.out.println("Error" + e);
 			}
-		
-		return showCurrentBalance(foundBalances);
-		
-	}catch(Exception e) {
-		System.out.println("Error" + e);
+			return false;	
 	}
 	
-	
-			return false;
-			
-	
-		
-		
-	}
 	public boolean showCurrentBalance(List <BankVO> foundBalances) {
 		try {
 			for (int i = 0; i < foundBalances.size() ; i++ ) {
-				System.out.println("-------------------------------------------------------");
-		    	System.out.println("Bank Account Number " + i +" : " + foundBalances.get(i).getIban_num() + "/" + foundBalances.get(i).getBalance() );
-		}}
+					System.out.println("-------------------------------------------------------");
+					System.out.println("Bank Account Number " + i +" : " + foundBalances.get(i).getIban_num() + "/" + foundBalances.get(i).getBalance() );
+				}
+			}
 		catch(Exception e) {
-			
-			System.out.println("Error" + e);
-			
+			System.out.println("Error" + e);	
 		}
-	return false;
-		
+	return false;	
 	}
 	
 	public boolean getTransaction(int currentAccountId, int MonthSelected , int YearSelected ) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
-	try {
+			try {
+					Statement qStmt = con.createStatement();
+					qStmt.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'AND Month(transaction_date) ='" + MonthSelected + "'AND Year(transaction_date) ='" + YearSelected + "'");
+					ResultSet rs = qStmt.getResultSet();
 		
+					while(rs.next()) 
+					{
+						trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
+						foundTransactions.add(trans_row);	
+					}
 		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_schema", "root","root1234");
-		Statement s = con.createStatement();
-		s.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'AND Month(transaction_date) ='" + MonthSelected + "'AND Year(transaction_date) ='" + YearSelected + "'");
-		ResultSet rs = s.getResultSet();
+				return showTransactions(foundTransactions);
 		
-		
-			while(rs.next()) 
-			{
-				trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
-				foundTransactions.add(trans_row);
-				
 			}
-		
-		return showTransactions(foundTransactions);
-		
-	}catch(Exception e) {
-		System.out.println("Error" + e);
-	}
-	
+			catch(Exception e) {
+				System.out.println("Error" + e);
+			}
 	
 			return false;
 	
-    
-	}
+		}
 	
 }
 

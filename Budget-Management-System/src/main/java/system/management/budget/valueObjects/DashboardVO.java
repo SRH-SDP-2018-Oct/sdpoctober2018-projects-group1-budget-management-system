@@ -14,14 +14,17 @@ public class DashboardVO {
 	private String transaction_time;
 	private String transaction_type;
 	private String currency;
-	private String iban;
+	private String iban_num;
+	private String bank_name;
 	
-	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String transaction_type,Double transaction_amount,String currency )
+	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String bank_name,String iban_num, String transaction_type,Double transaction_amount,String currency )
 	{
 	    this.transaction_time = transaction_time;
 	    this.transaction_date = transaction_date;
 	    this.transaction_name = transaction_name;
 	    this.merchant_name = merchant_name;
+	    this.bank_name= bank_name;
+	    this.iban_num = iban_num;
 	    this.transaction_type = transaction_type;
 	    this.transaction_amount = transaction_amount;
 	    this.currency = currency;
@@ -36,11 +39,23 @@ public class DashboardVO {
 		
 	}
 	
-	public String getIban() {
-		return iban;
+	public String getBank_name() {
+		return bank_name;
 	}
-	public void setIban(String iban) {
-		this.iban = iban;
+
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
+	}
+
+	public void setTransaction_amount(double transaction_amount) {
+		this.transaction_amount = transaction_amount;
+	}
+
+	public String getIban_num() {
+		return iban_num;
+	}
+	public void setIban_num(String iban_num) {
+		this.iban_num = iban_num;
 	}
 	public int getAccount_id() {
 		return account_id;

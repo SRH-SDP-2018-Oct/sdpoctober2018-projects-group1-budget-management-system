@@ -16,9 +16,11 @@ public class BankVO {
 	private String iban_num;
 	private float balance;
 	private int account_id;
+	private String bank_name;
 	
 	
-	public BankVO(String iban_num, Float balance) {
+	public BankVO(String bank_name,String iban_num, Float balance) {
+		this.bank_name = bank_name;
 		this.iban_num = iban_num;
 		this.balance = balance;
 	}
@@ -29,6 +31,12 @@ public class BankVO {
 	
 	
 	
+	public String getBank_name() {
+		return bank_name;
+	}
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
+	}
 	public int getBank_id() {
 		return bank_id;
 	}

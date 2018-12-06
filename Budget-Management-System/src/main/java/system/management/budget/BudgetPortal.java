@@ -3,10 +3,8 @@ package system.management.budget;
 import java.io.Console;
 import java.util.Scanner;
 
-import system.management.budget.connections.DashboardDaoImpl;
-import system.management.budget.connections.GenarateCustomReportDAOImpl;
-import system.management.budget.connections.LoginRegistrationDAOImpl;
-import system.management.budget.valueObjects.UserRegistrationVO;
+
+import system.management.budget.valueObjects.*;
 import system.management.budget.connections.*;
 
 
@@ -153,6 +151,8 @@ public class BudgetPortal
 			switch (display_type) {
 			case 1 : dashboardView.getCurrentBalance(currentAccountId);
 					 dashboardView.getTransaction(currentAccountId);
+					 dashboardView.getSubscritpions(currentAccountId);
+					 BudgetPortal.viewDashboard(currentAccountId, username);
 					 break;
 			case 2 : System.out.println("Please Select a Month");
 					 Scanner scan_month = new Scanner(System.in);
@@ -161,7 +161,8 @@ public class BudgetPortal
 					 Scanner scan_year = new Scanner (System.in);
 					 int YearSelected = scan_year.nextInt();
 					 dashboardView.getCurrentBalance(currentAccountId);
-					 dashboardView.getTransaction(currentAccountId, MonthSelected, YearSelected);
+					 dashboardView.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
+					 BudgetPortal.viewDashboard(currentAccountId, username);
 					 
 					 break;
 			default : System.out.println("Invalid Input");
@@ -173,9 +174,12 @@ public class BudgetPortal
 		case 2:
 			AddRemoveBankOrSubscription.menu(currentAccountId,username);
 			break;
+		case 3:
+			break;
 		case 4:
 			System.out.println("Notifications \n");
 			NotificationsDAOImpl.getNotifications(currentAccountId);
+			BudgetPortal.viewDashboard(currentAccountId, username);
 			break;
 			
 		case 5:

@@ -124,17 +124,20 @@ public class BudgetPortal
 	public static void viewDashboard(int currentAccountId, String username) {
 
 		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
-	
+		TransactionDAOImpl transactions = new TransactionDAOImpl();
+		
+		
 		System.out.println("Welcome User :  " + username + "\n" );
 		
 		System.out.println(" **********  Menu Options  ********** ");
 		
 		System.out.println("1 : Dashboard");
 		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
-		System.out.println("3 : Expense Tracker");
-		System.out.println("4 : Notifications");
-		System.out.println("5 : Reports");
-		System.out.println("6 : Logout");
+		System.out.println("3 : Adding a Transaction");
+		System.out.println("4 : Expense Tracker");
+		System.out.println("5 : Notifications");
+		System.out.println("6 : Reports");
+		System.out.println("7 : Logout");
 		
 		System.out.println(" ******************** ");
 		Scanner scanner = new Scanner(System.in);
@@ -174,15 +177,17 @@ public class BudgetPortal
 		case 2:
 			AddRemoveBankOrSubscription.menu(currentAccountId,username);
 			break;
-		case 3:
+		
+		case 3:		
+			transactions.transactionsInitialized(currentAccountId,username);
 			break;
-		case 4:
+		case 5:
 			System.out.println("Notifications \n");
 			NotificationsDAOImpl.getNotifications(currentAccountId);
 			BudgetPortal.viewDashboard(currentAccountId, username);
 			break;
-			
-		case 5:
+
+		case 6:
 			// Code for generating custom dynamic jasper report.
 			System.out.println("\nFrom date (yyyy:mm:dd)");
 			String customDateReportGenerationTo = scanner.nextLine();
@@ -191,7 +196,7 @@ public class BudgetPortal
 			GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
 			report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
 			break; // Is this redundant?
-		case 6:
+		case 7:
 			proceedToPortal();
 			break; // Is this redundant?
 		default:

@@ -1,0 +1,155 @@
+package system.management.budget.connections;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import system.management.budget.BudgetPortal;
+import system.management.budget.valueObjects.BankVO;
+import system.management.budget.valueObjects.TransactionVO;
+
+public class TransactionDAOImpl {
+	
+	static DatabaseConnect db = new DatabaseConnect();
+	static Connection con = db.dbConnect();
+	
+	
+	public void transactionsInitialized(int currentAccountId, String username) {
+		
+		List<BankVO> bankDetails = getUserBankId(currentAccountId);
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("\nOption number:");
+		int option=scanner.nextInt();		
+		
+		int bank_id= bankDetails.get(option-1).getBank_id();
+		float balance = bankDetails.get(option-1).getBalance();
+		
+		TransactionVO transactionDetails = new TransactionVO();
+		//Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Please enter your transaction details:");
+		System.out.println("Transaction Name (ex: Shopping/Food/Banking/Party)");
+		transactionDetails.setTransactionName(scanner.next());
+		
+		String transactionTypeCreditDebit;
+	
+		System.out.println("\nTransaction Amount");
+		transactionDetails.setTransactionAmount(scanner.nextFloat());
+		
+		System.out.println("\nTransaction Type: (Credit or Debit?)");	
+		transactionTypeCreditDebit = scanner.next();
+		
+		if(transactionTypeCreditDebit.startsWith("D") && balance <= transactionDetails.getTransactionAmount())
+			System.out.println("You don't have sufficient balance to add this transaction. "
+					+ "Please add an amount that is less than your current bank account balance : "+balance);
+
+		else if(transactionTypeCreditDebit.startsWith("D") || transactionTypeCreditDebit.startsWith("d"))
+			transactionDetails.setUpdatedAccountBalance(balance-transactionDetails.getTransactionAmount());
+		else if(transactionTypeCreditDebit.startsWith("C") || transactionTypeCreditDebit.startsWith("c")) {
+			transactionDetails.setUpdatedAccountBalance(balance+transactionDetails.getTransactionAmount());
+			System.out.println("Balance:   "+balance+" Update::   "+transactionDetails.getUpdatedAccountBalance());
+			}
+		else
+			System.out.println("Unable to recognize the transaction type. This transaction amount will not be reflected in your accounts total balance.");
+		
+		transactionDetails.setTransactionType(transactionTypeCreditDebit);
+		System.out.println("\nTransaction Date: ([DD-MM-YYYY])");
+		String transactionDate = scanner.next();
+					
+		try {
+			SimpleDateFormat transactionDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			java.util.Date date1 = transactionDateFormat.parse(transactionDate);
+			transactionDetails.setTransactionDate(new java.sql.Date(date1.getTime()));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		System.out.println("\nTransaction Time");
+		transactionDetails.setTransactionTime(scanner.next());
+		
+		System.out.println("\nMerchant Name");
+		transactionDetails.setMerchantName(scanner.next());
+	
+		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
+		System.out.println("Do you want to add another transaction? (Y / N)");
+		if(scanner.next().equals("Y"))
+			transactionsInitialized(currentAccountId, username);
+		else
+			BudgetPortal.viewDashboard(currentAccountId,username);
+			
+	}
+	private List<BankVO> getUserBankId(int currentAccountId) {
+
+		System.out.println("Please enter the IBAN option number under which you want the transaction to be linked");
+		List<BankVO> bankDetailsList = new ArrayList<BankVO>();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Bank WHERE account_id='"+ currentAccountId +"'");
+			
+			//HashMap<Integer, String> bankDetails = new HashMap<Integer, String>();
+			
+			BankVO bankDetails;
+			while(rs.next()) {
+				if(rs.getInt("account_id")==currentAccountId) {
+					bankDetails = new BankVO(rs.getInt("bank_id"),rs.getString("iban_num"),rs.getFloat("balance"));
+					bankDetailsList.add(bankDetails);
+				}
+			}
+			
+			int counter = 0;
+			for (int i=0; i<  bankDetailsList.size(); i++ ) {
+				counter++;
+				System.out.print(counter+")   IBAN:" + bankDetailsList.get(i).getIban_num()+"   Balance:"+bankDetailsList.get(i).getBalance()+"\n");
+			}
+			
+		return bankDetailsList;
+		}	
+		 catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return bankDetailsList;
+	}
+	public boolean addTransactionToDb(int currentAccountID, int bank_id, TransactionVO transactionDetails) {
+		
+		try {
+			
+			PreparedStatement stmt = con.prepareStatement(db.transactionsAdd);
+			stmt.setInt(1, currentAccountID);
+			stmt.setInt(2, bank_id);
+			stmt.setString(3, transactionDetails.getTransactionName());
+			stmt.setString(4, transactionDetails.getTransactionType());
+			stmt.setFloat(5, transactionDetails.getTransactionAmount());
+			stmt.setDate(6, transactionDetails.getTransactionDate());
+			stmt.setString(7, transactionDetails.getTransactionTime());
+			stmt.setString(8, transactionDetails.getMerchantName());
+			
+			stmt.execute();
+			stmt.close();
+			
+			Statement stmtBalanceUpdate = con.createStatement();
+			stmtBalanceUpdate.execute("UPDATE Bank SET balance ='"+ transactionDetails.getUpdatedAccountBalance() +"' WHERE bank_id='"+ bank_id +"'");
+			stmtBalanceUpdate.close();
+			
+			return true;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+}

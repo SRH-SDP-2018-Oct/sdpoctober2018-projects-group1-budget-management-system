@@ -1,16 +1,5 @@
 package system.management.budget.valueObjects;
 
-
-
-
-
-
-
-
-
-
-
-
 public class BankVO {
 	private int bank_id;
 	private String iban_num;
@@ -25,11 +14,11 @@ public class BankVO {
 		this.balance = balance;
 	}
 	
-	
-	
-	
-	
-	
+	public BankVO(int bank_id, String iban_num, float balance) {
+		this.bank_id=bank_id;
+		this.iban_num=iban_num;
+		this.balance=balance;
+	}
 	
 	public String getBank_name() {
 		return bank_name;

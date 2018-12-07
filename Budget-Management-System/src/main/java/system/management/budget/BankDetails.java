@@ -9,8 +9,6 @@ import java.util.List;
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.*;
 
-import java.util.*;
-
 public class BankDetails implements TransactionDetails {
 
 

@@ -87,6 +87,7 @@ public class BudgetPortal
 
 	public static void userLogin(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
+		System.out.println("\n ********************");
 		System.out.println("\nEnter your Email-ID: ");
 		String username = scanner.nextLine();
 
@@ -103,12 +104,9 @@ public class BudgetPortal
 			//Password input for eclipse console
 			pass = scanner.nextLine();
 		}
-		System.out.println("Password is: " + pass);
-		System.out.println("Your username is " + username);
 
 		int currentAccountId = con.createConnection(username, pass);
-		System.out.println("User logged in :: " + currentAccountId);
-		
+	
 		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {
@@ -182,11 +180,11 @@ public class BudgetPortal
 						break;
 				 
 				case 2 :  
-						System.out.println("Please Select a Month :");
+						System.out.println("Please Select a Month (1 - 12) :");
 				 		Scanner scan_month = new Scanner(System.in);
 				 		int MonthSelected = scan_month.nextInt();
 				 		
-				 		System.out.println("Please Select a Year :");
+				 		System.out.println("Please Select a Year ( YYYY ) :");
 				 		Scanner scan_year = new Scanner (System.in);
 				 		int YearSelected = scan_year.nextInt();
 				 		

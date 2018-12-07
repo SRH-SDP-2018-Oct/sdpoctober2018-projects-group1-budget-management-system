@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
-
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -221,7 +220,7 @@ public class DashboardDaoImpl {
 //													false);
 			DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	        Statement qStmt = con.createStatement();
-	        ResultSet rs = qStmt.executeQuery("SELECT SUM(transaction_amount) AS Amount, month(transaction_date) AS Months FROM Transactions WHERE account_id = '" + currentAccountId + "' GROUP BY month(transaction_date)");
+	        ResultSet rs = qStmt.executeQuery("SELECT SUM(transaction_amount) AS Amount, monthname(transaction_date) AS Months FROM Transactions WHERE account_id = '" + currentAccountId + "' GROUP BY Months");
 	        
 	        while (rs.next()) {
 	        	Float amount = rs.getFloat("Amount");
@@ -231,10 +230,9 @@ public class DashboardDaoImpl {
 	        JFreeChart chart = ChartFactory.createBarChart("Monthly Spending", "Months", "Amount", dataset, PlotOrientation.VERTICAL, false, true, false);
 	        return chart;
 	        
-	        
+//			Save Chart in a specific Folder :	        
 //	        int width =640;
 //	        int height =480;
-//	        
 //	        File BarChart = new File("/Users/hamzasaib/desktop/output_chart_png");
 //	        ChartUtilities.saveChartAsPNG(BarChart,chart,width,height); 
 	        

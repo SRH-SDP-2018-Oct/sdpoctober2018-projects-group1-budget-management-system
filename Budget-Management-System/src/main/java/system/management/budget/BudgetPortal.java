@@ -7,6 +7,15 @@ import java.util.Scanner;
 import system.management.budget.valueObjects.*;
 import system.management.budget.connections.*;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.DefaultXYDataset;
+
 
 public class BudgetPortal 
 {
@@ -154,7 +163,8 @@ public class BudgetPortal
 		case 1:
 				System.out.println("Please Select the Type of Display" );
 				System.out.println("1 : Display All");
-				System.out.println("2: Display by Month");
+				System.out.println("2 : Display by Month");
+				System.out.println("3 : Charts");
 				Scanner scan_1 = new Scanner(System.in);
 				int display_type = scan_1.nextInt();
 				
@@ -175,8 +185,27 @@ public class BudgetPortal
 								 dashboardView.getCurrentBalance(currentAccountId);
 								 dashboardView.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
 								 BudgetPortal.viewDashboard(currentAccountId, username);
-					 
 								 break;
+					     case 3 : System.out.println("Choose the Chart you want to display : ");
+								  System.out.println("1 : Montly Spending ");
+								  Scanner scan_chart = new Scanner(System.in);		
+								  int chart_selected = scan_chart.nextInt();
+								  switch (chart_selected)  {
+								  
+								  		case 1 : JFreeChart chart = dashboardView.createMonthlySpendingBarChart(currentAccountId);
+								  				 ChartPanel cp = new ChartPanel(chart);
+								  				 JFrame frame = new JFrame("Bar Chart");
+
+								  				 frame.setSize(600, 400);
+								  				 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+								  				 frame.setVisible(true);
+								  				 frame.getContentPane().add(cp);
+								  				 BudgetPortal.viewDashboard(currentAccountId, username);
+								  				 break;
+								  		 default : System.out.println("Invalid Input");
+								  }
+								 
+										  
 						default : System.out.println("Invalid Input");
 			
 				}

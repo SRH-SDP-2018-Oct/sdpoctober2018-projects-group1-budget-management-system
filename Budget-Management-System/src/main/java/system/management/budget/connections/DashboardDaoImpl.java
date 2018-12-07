@@ -23,15 +23,15 @@ public class DashboardDaoImpl {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
 		try {
-			Statement qStmt = con.createStatement();
-			qStmt.execute("Select DISTINCT b.bank_name, b.iban_num, t.* FROM Transactions t INNER JOIN ( SELECT bank.* FROM Bank, Transactions WHERE bank.account_id ='"+ currentAccountId +"' )b ON t.bank_id = b.bank_id ORDER BY t.transaction_date DESC, t.transaction_time DESC");
-			ResultSet rs = qStmt.getResultSet();
+				Statement qStmt = con.createStatement();
+				qStmt.execute("Select DISTINCT b.bank_name, b.iban_num, t.* FROM Transactions t INNER JOIN ( SELECT bank.* FROM Bank, Transactions WHERE bank.account_id ='"+ currentAccountId +"' )b ON t.bank_id = b.bank_id ORDER BY t.transaction_date DESC, t.transaction_time DESC");
+				ResultSet rs = qStmt.getResultSet();
 		
-			while(rs.next()) 
-			{
-				trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
-				foundTransactions.add(trans_row);	
-			}
+				while(rs.next()) 
+				{
+					trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
+					foundTransactions.add(trans_row);	
+				}
 		
 			return showTransactions(foundTransactions);
 		
@@ -39,7 +39,7 @@ public class DashboardDaoImpl {
 			System.out.println("Error" + e);
 		}
 		
-	return false;
+		return false;
 	}
 	
 	
@@ -48,29 +48,29 @@ public class DashboardDaoImpl {
 			
 			if (foundTransactions.isEmpty())
 			{
-	    	System.out.println("No Transaction added yet ");
+				System.out.println("No Transaction added yet ");
 			}	
 			else {
-			System.out.print("TRANSACTIONS : \n \n");
+					System.out.print("TRANSACTIONS : \n \n");
 			
-			System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		    System.out.printf("%10s %15s %20s %30s %20s %20s %10s %10s %10s", "TIME", "DATE", "NAME", "MERCHANT","BANK NAME", "IBAN", "TYPE","AMOUNT","CURRENCY");
-		    System.out.println();	
-		    System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
-			for (int i = 0; i < foundTransactions.size() ; i++ ) {
-				System.out.format("%10s %15s %20s %30s %20s %20s %10s %10s %10s",
+					System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
+					System.out.printf("%10s %15s %20s %30s %20s %20s %10s %10s %10s", "TIME", "DATE", "NAME", "MERCHANT","BANK NAME", "IBAN", "TYPE","AMOUNT","CURRENCY");
+					System.out.println();	
+					System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
+					for (int i = 0; i < foundTransactions.size() ; i++ ) {
+						System.out.format("%10s %15s %20s %30s %20s %20s %10s %10s %10s",
 						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getBank_name(), foundTransactions.get(i).getIban_num(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),foundTransactions.get(i).getCurrency()  );
-		        System.out.println();
-				System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
-			}
-			System.out.println("\n");
+						System.out.println();
+						System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
+					}
+					System.out.println("\n");
 
+				}
 			}
+			catch(Exception e) {
+				System.out.println("Error" + e);	
 			}
-		catch(Exception e) {
-			System.out.println("Error" + e);	
-		}
-	return false;	
+		return false;	
 	}
 	
 	public boolean getCurrentBalance(int currentAccountId) {
@@ -84,7 +84,6 @@ public class DashboardDaoImpl {
 					while(rs.next()) 
 					{
 						balance_row = new BankVO(rs.getString("bank_name"),rs.getString("iban_num"),rs.getFloat("balance"));
-//						balance_row.setIban_num(s.getString("bank_name"));
 						foundBalances.add(balance_row);
 					}
 					
@@ -104,24 +103,24 @@ public class DashboardDaoImpl {
 		    	System.out.println("No Bank Account added yet ");
 			}
 			else {
-			System.out.print("CURRENT ACCOUNT BALANCES : \n \n");
-			System.out.println("------------------------------------------------------------------------");
-		    System.out.printf("%20s %20s %20s", "NAME", "IBAN", "BALANCE");
-		    System.out.println();
-		    System.out.println("------------------------------------------------------------------------");
+				System.out.print("CURRENT ACCOUNT BALANCES : \n \n");
+				System.out.println("------------------------------------------------------------------------");
+				System.out.printf("%20s %20s %20s", "NAME", "IBAN", "BALANCE");
+				System.out.println();
+				System.out.println("------------------------------------------------------------------------");
 		   
-			for (int i = 0; i < foundBalances.size() ; i++ ) {
+				for (int i = 0; i < foundBalances.size() ; i++ ) {
 					System.out.format("%20s %20s %20s",foundBalances.get(i).getBank_name(), foundBalances.get(i).getIban_num(), foundBalances.get(i).getBalance() );
 					System.out.println();
 				    System.out.println("------------------------------------------------------------------------");
+				}
+				System.out.println("\n");
 			}
-			System.out.println("\n");
 			}
+			catch(Exception e) {
+				System.out.println("Error" + e);	
 			}
-		catch(Exception e) {
-			System.out.println("Error" + e);	
-		}
-	return false;	
+		return false;	
 	}
 	
 	public boolean getTransactionByDate(int currentAccountId, int MonthSelected , int YearSelected ) {
@@ -174,29 +173,29 @@ public class DashboardDaoImpl {
 		}
 	public boolean showSubscriptions(List <SubscriptionVO> showSubscriptions) {
 		try {
-			System.out.println("\n  SUBSCRIPTIONS :\n ");
-			if (showSubscriptions.isEmpty())
-			{
-		    	System.out.println("No Subscriptions added yet ");
-			}
-			else {
-			System.out.println("--------------------------------------------------------------");
-		    System.out.printf("%20s %20s %20s", "SUBSCRIPTION NAME", "START DATE", "EXPIRES ON");
-		    System.out.println();	
-		    System.out.println("--------------------------------------------------------------");
+				System.out.println("\n  SUBSCRIPTIONS :\n ");
+				if (showSubscriptions.isEmpty())
+				{
+					System.out.println("No Subscriptions added yet ");
+				}
+				else {
+						System.out.println("--------------------------------------------------------------");
+						System.out.printf("%20s %20s %20s", "SUBSCRIPTION NAME", "START DATE", "EXPIRES ON");
+						System.out.println();	
+						System.out.println("--------------------------------------------------------------");
 		
-			for (int i = 0; i < showSubscriptions.size() ; i++ ) {
-				System.out.format("%20s %20s %20s", showSubscriptions.get(i).getSubscription_name(), showSubscriptions.get(i).getSubscription_start_date(), showSubscriptions.get(i).getSubscription_end_date()  );
-		        System.out.println();
-		        System.out.println("--------------------------------------------------------------");
+						for (int i = 0; i < showSubscriptions.size() ; i++ ) {
+							System.out.format("%20s %20s %20s", showSubscriptions.get(i).getSubscription_name(), showSubscriptions.get(i).getSubscription_start_date(), showSubscriptions.get(i).getSubscription_end_date()  );
+							System.out.println();
+							System.out.println("--------------------------------------------------------------");
+						}
+						System.out.println("\n");
+				}
 			}
-			System.out.println("\n");
+			catch(Exception e) {
+				System.out.println("Error" + e);	
 			}
-		}
-		catch(Exception e) {
-			System.out.println("Error" + e);	
-		}
-	return false;	
+		return false;	
 	}
 	
 	

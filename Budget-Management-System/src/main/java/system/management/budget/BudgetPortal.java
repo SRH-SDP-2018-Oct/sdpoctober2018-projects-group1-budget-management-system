@@ -11,10 +11,10 @@ import system.management.budget.connections.*;
 public class BudgetPortal 
 {
 	public static void main(String[] args) {
-		
 		clearScreen();
 		proceedToPortal();
 	}
+	
 	public static void proceedToPortal() {
 		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
 		Scanner scanner = new Scanner(System.in);
@@ -27,10 +27,10 @@ public class BudgetPortal
 		
 		String loginRegistrationChoice=scanner.nextLine();
 		LoginRegistrationDAOImpl con = new LoginRegistrationDAOImpl();
+		
 		if (loginRegistrationChoice.equals("1")) {
 			userLogin(con);
 		}
-		//Registration form:
 		else if(loginRegistrationChoice.equals("2")){
 			userRegistration(con);
 		}
@@ -45,14 +45,17 @@ public class BudgetPortal
 	public static void userRegistration(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
+		
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
-		//String newLine = System.getProperty("line.separator");
 		userDetails.setFirstName(scanner.nextLine());
+		
 		System.out.println("\nLAST NAME:");
 		userDetails.setLastName(scanner.nextLine());
+		
 		do{
 			System.out.println("\nEMAIL ADDRESS:");
 			userDetails.setEmailID(scanner.nextLine());
+			
 				if(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."))
 					System.out.println("Please enter a valid email address.");
 		}while(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."));
@@ -60,8 +63,10 @@ public class BudgetPortal
 		
 		System.out.println("\nGENDER");
 		userDetails.setGender(scanner.nextLine());
+		
 		System.out.println("\nPASSWORD");
 		userDetails.setPassword(scanner.nextLine());
+		
 		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
 				+ "\n\nWHO WAS YOUR FIRST EMPLOYER.");
 		userDetails.setRecoveryAnswer(scanner.nextLine());
@@ -75,13 +80,12 @@ public class BudgetPortal
 	public static void userLogin(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nEnter your Email-ID: ");
-
 		String username = scanner.nextLine();
-		// scanner.close();
 
 		Console c = System.console();
 		String pass;
 		System.out.println("\nEnter password: ");
+		
 		if(c!=null) {
 			
 			char[] ch = c.readPassword();
@@ -96,6 +100,7 @@ public class BudgetPortal
 
 		int currentAccountId = con.createConnection(username, pass);
 		System.out.println("User logged in :: " + currentAccountId);
+		
 		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {
@@ -107,30 +112,31 @@ public class BudgetPortal
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
+		
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
+		
 		System.out.println("What is the last name of the teacher who failed you?:");
 		String answer=scanner.nextLine();
 		
 		con.forgotPasswordDbConnection(email, answer);
 		scanner.close();
-		}
+		
+	}
 	
-		private static void clearScreen() {  
+	private static void clearScreen() {  
 	    System.out.print("\033[H\033[2J");  
 	    System.out.flush();  
 	}
 	
 	public static void viewDashboard(int currentAccountId, String username) {
-
+		
 		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
 		TransactionDAOImpl transactions = new TransactionDAOImpl();
-		
 		
 		System.out.println("Welcome User :  " + username + "\n" );
 		
 		System.out.println(" **********  Menu Options  ********** ");
-		
 		System.out.println("1 : Dashboard");
 		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
 		System.out.println("3 : Adding a Transaction");
@@ -138,74 +144,72 @@ public class BudgetPortal
 		System.out.println("5 : Notifications");
 		System.out.println("6 : Reports");
 		System.out.println("7 : Logout");
-		
 		System.out.println(" ******************** ");
+		
 		Scanner scanner = new Scanner(System.in);
 		int choice = scanner.nextInt();
 	
 		
 		switch (choice) {
 		case 1:
-			System.out.println("Please Select the Type of Display" );
-			System.out.println("1 : Display All");
-			System.out.println("2: Display by Month");
-			Scanner scan_1 = new Scanner(System.in);
-			int display_type = scan_1.nextInt();
-			switch (display_type) {
-			case 1 : dashboardView.getCurrentBalance(currentAccountId);
-					 dashboardView.getTransaction(currentAccountId);
-					 dashboardView.getSubscritpions(currentAccountId);
-					 BudgetPortal.viewDashboard(currentAccountId, username);
-					 break;
-			case 2 : System.out.println("Please Select a Month");
-					 Scanner scan_month = new Scanner(System.in);
-					 int MonthSelected = scan_month.nextInt();
-					 System.out.println("Please Select a Year");
-					 Scanner scan_year = new Scanner (System.in);
-					 int YearSelected = scan_year.nextInt();
-					 dashboardView.getCurrentBalance(currentAccountId);
-					 dashboardView.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
-					 BudgetPortal.viewDashboard(currentAccountId, username);
+				System.out.println("Please Select the Type of Display" );
+				System.out.println("1 : Display All");
+				System.out.println("2: Display by Month");
+				Scanner scan_1 = new Scanner(System.in);
+				int display_type = scan_1.nextInt();
+				
+				switch (display_type) {
+				
+						case 1 : dashboardView.getCurrentBalance(currentAccountId);
+								 dashboardView.getTransaction(currentAccountId);
+								 dashboardView.getSubscritpions(currentAccountId);
+								 BudgetPortal.viewDashboard(currentAccountId, username);
+								 break;
+								 
+						case 2 : System.out.println("Please Select a Month");
+								 Scanner scan_month = new Scanner(System.in);
+								 int MonthSelected = scan_month.nextInt();
+								 System.out.println("Please Select a Year");
+								 Scanner scan_year = new Scanner (System.in);
+								 int YearSelected = scan_year.nextInt();
+								 dashboardView.getCurrentBalance(currentAccountId);
+								 dashboardView.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
+								 BudgetPortal.viewDashboard(currentAccountId, username);
 					 
-					 break;
-			default : System.out.println("Invalid Input");
+								 break;
+						default : System.out.println("Invalid Input");
 			
-			}
-			scan_1.close();
-			
-			break;
-		case 2:
-			AddRemoveBankOrSubscription.menu(currentAccountId,username);
-			break;
+				}
+				scan_1.close();
+				break;
+				
+		case 2: AddRemoveBankOrSubscription.menu(currentAccountId,username);
+				break;
 		
-		case 3:		
-			transactions.transactionsInitialized(currentAccountId,username);
-			break;
-		case 5:
-			System.out.println("Notifications \n");
-			NotificationsDAOImpl.getNotifications(currentAccountId);
-			BudgetPortal.viewDashboard(currentAccountId, username);
-			break;
+		case 3:	transactions.transactionsInitialized(currentAccountId,username);
+			 	break;
+			 	
+		case 5: System.out.println("Notifications \n");
+				NotificationsDAOImpl.getNotifications(currentAccountId);
+				BudgetPortal.viewDashboard(currentAccountId, username);
+				break;
 
-		case 6:
-			// Code for generating custom dynamic jasper report.
-			System.out.println("\nFrom date (yyyy:mm:dd)");
-			String customDateReportGenerationTo = scanner.nextLine();
-			System.out.println("\nFrom date (yyyy:mm:dd)");
-			String customDateReportGenerationFrom = scanner.nextLine();
-			GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
-			report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
-			break; // Is this redundant?
-		case 7:
-			proceedToPortal();
-			break; // Is this redundant?
-		default:
-			System.out.println("Invalid Input");
+		case 6: System.out.println("\nFrom date (yyyy:mm:dd)");
+				String customDateReportGenerationTo = scanner.nextLine();
+				System.out.println("\nFrom date (yyyy:mm:dd)");
+				String customDateReportGenerationFrom = scanner.nextLine();
+				GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
+				report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
+				break; // Is this redundant?
+				
+		case 7: proceedToPortal();
+				break; // Is this redundant?
+				
+		default: System.out.println("Invalid Input");
+		
 		}
 		
 		scanner.close();
-		
-	
 		
 	}
 	

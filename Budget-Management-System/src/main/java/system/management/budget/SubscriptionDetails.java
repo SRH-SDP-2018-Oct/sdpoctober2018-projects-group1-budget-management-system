@@ -45,15 +45,15 @@ public class SubscriptionDetails implements TransactionDetails {
 					System.out.println("No Subscriptions added yet ");
 				}
 				else {
-						System.out.println("--------------------------------------------------------------");
+						System.out.println("-----------------------------------------------------------------");
 						System.out.printf("%20s %20s %20s", "SUBSCRIPTION NAME", "START DATE", "EXPIRES ON");
 						System.out.println();	
-						System.out.println("--------------------------------------------------------------");
+						System.out.println("-----------------------------------------------------------------");
 		
 						for (int i = 0; i < showSubscriptions.size() ; i++ ) {
 							System.out.format("%20s %20s %20s", showSubscriptions.get(i).getSubscription_name(), showSubscriptions.get(i).getSubscription_start_date(), showSubscriptions.get(i).getSubscription_end_date()  );
 							System.out.println();
-							System.out.println("--------------------------------------------------------------");
+							System.out.println("-----------------------------------------------------------------");
 						}
 						System.out.println("\n");
 				}

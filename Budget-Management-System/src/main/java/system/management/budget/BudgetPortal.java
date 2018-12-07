@@ -23,14 +23,15 @@ public class BudgetPortal
 	}
 	
 	public static void proceedToPortal() {
-		System.out.println("Welcome to the BUDGET MANAGEMENT SYSTEM Portal...");
+		System.out.println(" Welcome to the BUDGET MANAGEMENT SYSTEM Portal ");
+		printSeparator(55);
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.println("\n Select your Option ");
 		System.out.println("\n1 : Login");
 		System.out.println("\n2 : Register ");
 		System.out.println("\n3 : Forgot your Password");
-		System.out.println("\n ******************** \n");
+		printSeparator(55);
 		System.out.println("Go For :");
 		
 		String loginRegistrationChoice=scanner.nextLine();
@@ -53,7 +54,7 @@ public class BudgetPortal
 	public static void userRegistration(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
-		
+		printSeparator(55);
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
 		userDetails.setFirstName(scanner.nextLine());
 		
@@ -76,18 +77,21 @@ public class BudgetPortal
 		userDetails.setPassword(scanner.nextLine());
 		
 		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
-				+ "\n\nWHO WAS YOUR FIRST EMPLOYER.");
+				+ "\n\nWhat is the last name of the teacher who failed you?:");
 		userDetails.setRecoveryAnswer(scanner.nextLine());
-		System.out.println(userDetails.getFirstName()+" "+userDetails.getEmailID()+" "+userDetails.getLastName()+" "+userDetails.getGender());
 	
 		con.registrationDbConnection(userDetails);
-		
-		System.out.println("Registration successful... You may proceed to login.");
+		printSeparator(55);
+		clearScreen();
+		System.out.println("Registration successful !!! ... You may proceed to login.");
+		userLogin(con);
 	}
 
 	public static void userLogin(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("\n ********************");
+		printSeparator(55);
+		System.out.println("\n LOGIN");
+		printSeparator(55);
 		System.out.println("\nEnter your Email-ID: ");
 		String username = scanner.nextLine();
 
@@ -110,7 +114,7 @@ public class BudgetPortal
 		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {
-			System.out.println("Login failed. Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
+			System.out.println("Login failed.\n\n Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
 			userLogin(con); //Recursive function.
 		}
 		scanner.close();
@@ -118,10 +122,11 @@ public class BudgetPortal
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
-		
+		System.out.println("\n REGISTER");
+		printSeparator(55);
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
-		
+		System.out.println("\n");
 		System.out.println("What is the last name of the teacher who failed you?:");
 		String answer=scanner.nextLine();
 		
@@ -135,13 +140,22 @@ public class BudgetPortal
 	    System.out.flush();  
 	}
 	
+	public static void printSeparator(int count) {
+		System.out.print("\n");
+		for (int i=0; i<count; i++){
+				System.out.print("*");
+		}
+		System.out.print("\n");
+	}
+	
 	public static void viewDashboard(int currentAccountId, String username) {
 		
 		TransactionDAOImpl transactions = new TransactionDAOImpl();
 		
+		printSeparator(55);
 		System.out.println("Welcome User :  " + username + "\n" );
 		
-		System.out.println(" **********  Menu Options  ********** ");
+		System.out.println("*******************  Menu Options  *******************");
 		System.out.println("1 : Dashboard");
 		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
 		System.out.println("3 : Adding a Transaction");
@@ -149,11 +163,11 @@ public class BudgetPortal
 		System.out.println("5 : Notifications");
 		System.out.println("6 : Reports");
 		System.out.println("7 : Logout");
-		System.out.println(" ******************** \n");
+		printSeparator(55);
 		System.out.println("Go For :");
 		Scanner scanner = new Scanner(System.in);
 		int choice = scanner.nextInt();
-		System.out.println(" ******************** \n");
+		printSeparator(55);
 		
 		switch (choice) {
 		case 1:
@@ -161,10 +175,11 @@ public class BudgetPortal
 				System.out.println("1 : Display All");
 				System.out.println("2 : Display by Month ");
                 System.out.println("3 : Charts \n");
+            	printSeparator(55);
 				System.out.println("Go For :");
 				Scanner scan_1 = new Scanner(System.in);
 				int display_type = scan_1.nextInt();
-				System.out.println(" ******************** \n");
+				printSeparator(55);
 				switch (display_type) {
 				
 				case 1 : 
@@ -198,7 +213,9 @@ public class BudgetPortal
 						
                 case 3 : 
                 		System.out.println("Choose the Chart you want to display : ");
-                		System.out.println("1 : Monthly Spending ");
+                		System.out.println("1 : Monthly Spending \n");
+                		System.out.println("Go For :");
+                		printSeparator(55);
                 		Scanner scan_chart = new Scanner(System.in);        
                 		int chart_selected = scan_chart.nextInt();
                 		switch (chart_selected)  {
@@ -243,8 +260,10 @@ public class BudgetPortal
 				report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
 				break; // Is this redundant?
 				
-		case 7: proceedToPortal();
-				break; // Is this redundant?
+		case 7: 
+				clearScreen();
+				proceedToPortal();
+				break; 
 				
 		default: System.out.println("Invalid Input");
 		

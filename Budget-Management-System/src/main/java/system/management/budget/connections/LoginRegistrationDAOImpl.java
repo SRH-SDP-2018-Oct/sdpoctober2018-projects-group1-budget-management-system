@@ -81,23 +81,24 @@ public class LoginRegistrationDAOImpl {
 				if(emailId.equals(email)) {
 					String securityAnswer= rs.getString("recovery_answer");
 					if(securityAnswer.equals(recoveryAnswer)) {
-						do {			
-						System.out.println("Please enter your new password:");
-						password=scanner.nextLine();
-						System.out.println("Please reenter your password");
-						reenteredPassword=scanner.nextLine();
-						if(!password.equals(reenteredPassword)) {
-							System.out.println("Your password doesn't match. Please enter again");
-						}
+						do {	
+							System.out.println("\n");	
+							System.out.println("Please enter your new password:");
+							password=scanner.nextLine();
+							System.out.println("Please reenter your password");
+							reenteredPassword=scanner.nextLine();
+							if(!password.equals(reenteredPassword)) {
+								System.out.println("Your password doesn't match. Please enter again");
+							}
 						}
 						while(!password.equals(reenteredPassword));
 						
-						//PreparedStatement updatestmt= con.prepareStatement("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
-						Statement updatestmt = con.createStatement();
-						updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
-						//updatestmt.setString(1,reenteredPassword);
-						//updatestmt.executeQuery();
-						updatestmt.close();
+							//PreparedStatement updatestmt= con.prepareStatement("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
+							Statement updatestmt = con.createStatement();
+							updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
+							//updatestmt.setString(1,reenteredPassword);
+							//updatestmt.executeQuery();
+							updatestmt.close();
 						
 						scanner.close();
 					

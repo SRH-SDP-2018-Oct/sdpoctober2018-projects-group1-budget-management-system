@@ -9,13 +9,11 @@ import system.management.budget.connections.*;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.DefaultXYDataset;
-
 
 public class BudgetPortal 
 {
@@ -32,7 +30,8 @@ public class BudgetPortal
 		System.out.println("\n1 : Login");
 		System.out.println("\n2 : Register ");
 		System.out.println("\n3 : Forgot your Password");
-		System.out.println("\n ******************** ");
+		System.out.println("\n ******************** \n");
+		System.out.println("Go For :");
 		
 		String loginRegistrationChoice=scanner.nextLine();
 		LoginRegistrationDAOImpl con = new LoginRegistrationDAOImpl();
@@ -140,7 +139,6 @@ public class BudgetPortal
 	
 	public static void viewDashboard(int currentAccountId, String username) {
 		
-		DashboardDaoImpl dashboardView = new DashboardDaoImpl();
 		TransactionDAOImpl transactions = new TransactionDAOImpl();
 		
 		System.out.println("Welcome User :  " + username + "\n" );
@@ -153,62 +151,78 @@ public class BudgetPortal
 		System.out.println("5 : Notifications");
 		System.out.println("6 : Reports");
 		System.out.println("7 : Logout");
-		System.out.println(" ******************** ");
-		
+		System.out.println(" ******************** \n");
+		System.out.println("Go For :");
 		Scanner scanner = new Scanner(System.in);
 		int choice = scanner.nextInt();
-	
+		System.out.println(" ******************** \n");
 		
 		switch (choice) {
 		case 1:
 				System.out.println("Please Select the Type of Display" );
 				System.out.println("1 : Display All");
-				System.out.println("2 : Display by Month");
-				System.out.println("3 : Charts");
+				System.out.println("2 : Display by Month ");
+                System.out.println("3 : Charts \n");
+				System.out.println("Go For :");
 				Scanner scan_1 = new Scanner(System.in);
 				int display_type = scan_1.nextInt();
-				
+				System.out.println(" ******************** \n");
 				switch (display_type) {
 				
-						case 1 : dashboardView.getCurrentBalance(currentAccountId);
-								 dashboardView.getTransaction(currentAccountId);
-								 dashboardView.getSubscritpions(currentAccountId);
-								 BudgetPortal.viewDashboard(currentAccountId, username);
-								 break;
-								 
-						case 2 : System.out.println("Please Select a Month");
-								 Scanner scan_month = new Scanner(System.in);
-								 int MonthSelected = scan_month.nextInt();
-								 System.out.println("Please Select a Year");
-								 Scanner scan_year = new Scanner (System.in);
-								 int YearSelected = scan_year.nextInt();
-								 dashboardView.getCurrentBalance(currentAccountId);
-								 dashboardView.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
-								 BudgetPortal.viewDashboard(currentAccountId, username);
-								 break;
-					     case 3 : System.out.println("Choose the Chart you want to display : ");
-								  System.out.println("1 : Montly Spending ");
-								  Scanner scan_chart = new Scanner(System.in);		
-								  int chart_selected = scan_chart.nextInt();
-								  switch (chart_selected)  {
-								  
-								  		case 1 : JFreeChart chart = dashboardView.createMonthlySpendingBarChart(currentAccountId);
-								  				 ChartPanel cp = new ChartPanel(chart);
-								  				 JFrame frame = new JFrame("Bar Chart");
+				case 1 : 
+						DashboardDaoImpl dashboardViewForCurrentBalance  = new DashboardDaoImpl(new CurrentBalance());
+						dashboardViewForCurrentBalance.budgetTransactionType(currentAccountId);
+						
+						DashboardDaoImpl dashboardViewForBank = new DashboardDaoImpl(new BankDetails());
+						dashboardViewForBank.budgetTransactionType(currentAccountId);
+						
+						DashboardDaoImpl dashboardViewForSubscription = new DashboardDaoImpl(new SubscriptionDetails());
+						dashboardViewForSubscription.budgetTransactionType(currentAccountId);
+				
+						break;
+				 
+				case 2 :  
+						System.out.println("Please Select a Month :");
+				 		Scanner scan_month = new Scanner(System.in);
+				 		int MonthSelected = scan_month.nextInt();
+				 		
+				 		System.out.println("Please Select a Year :");
+				 		Scanner scan_year = new Scanner (System.in);
+				 		int YearSelected = scan_year.nextInt();
+				 		
+				 		DashboardDaoImpl dashboardViewForCurrentBalance2  = new DashboardDaoImpl(new CurrentBalance());
+				 		dashboardViewForCurrentBalance2.budgetTransactionType(currentAccountId);
+				 		
+				 		BankDetails transactionDetailsByDate = new BankDetails();
+				 		transactionDetailsByDate.getTransactionByDate(currentAccountId, MonthSelected, YearSelected);
+	 
+						break;
+						
+                case 3 : 
+                		System.out.println("Choose the Chart you want to display : ");
+                		System.out.println("1 : Monthly Spending ");
+                		Scanner scan_chart = new Scanner(System.in);        
+                		int chart_selected = scan_chart.nextInt();
+                		switch (chart_selected)  {
+                
+                        case 1 : JFreeChart chart = DashboardDaoImpl.createMonthlySpendingBarChart(currentAccountId);
+                                 ChartPanel cp = new ChartPanel(chart);
+                                 JFrame frame = new JFrame("Bar Chart");
 
-								  				 frame.setSize(600, 400);
-								  				 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-								  				 frame.setVisible(true);
-								  				 frame.getContentPane().add(cp);
-								  				 BudgetPortal.viewDashboard(currentAccountId, username);
-								  				 break;
-								  		 default : System.out.println("Invalid Input");
-								  }
-								 
-										  
-						default : System.out.println("Invalid Input");
+                                 frame.setSize(600, 400);
+                                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                 frame.setVisible(true);
+                                 frame.getContentPane().add(cp);
+                                 BudgetPortal.viewDashboard(currentAccountId, username);
+                                 break;
+                                 
+                        default : System.out.println("Invalid Input");
+                		}
+
+				default : System.out.println("Invalid Input");
 			
 				}
+				BudgetPortal.viewDashboard(currentAccountId, username);
 				scan_1.close();
 				break;
 				
@@ -240,7 +254,9 @@ public class BudgetPortal
 		
 		scanner.close();
 		
-	}
-	
+	}	
 
 }
+
+
+

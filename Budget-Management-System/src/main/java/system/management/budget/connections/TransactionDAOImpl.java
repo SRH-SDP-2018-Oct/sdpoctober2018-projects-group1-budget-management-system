@@ -50,11 +50,8 @@ public class TransactionDAOImpl {
 		System.out.println("\nTransaction Type: (Credit or Debit?)");	
 		transactionTypeCreditDebit = scanner.next();
 		
-		if(transactionTypeCreditDebit.startsWith("D") && balance <= transactionDetails.getTransactionAmount())
-			System.out.println("You don't have sufficient balance to add this transaction. "
-					+ "Please add an amount that is less than your current bank account balance : "+balance);
 
-		else if(transactionTypeCreditDebit.startsWith("D") || transactionTypeCreditDebit.startsWith("d"))
+		if(transactionTypeCreditDebit.startsWith("D") || transactionTypeCreditDebit.startsWith("d"))
 			transactionDetails.setUpdatedAccountBalance(balance-transactionDetails.getTransactionAmount());
 		else if(transactionTypeCreditDebit.startsWith("C") || transactionTypeCreditDebit.startsWith("c")) {
 			transactionDetails.setUpdatedAccountBalance(balance+transactionDetails.getTransactionAmount());

@@ -69,7 +69,7 @@ public class BankDetails implements TransactionDetails {
 			System.out.print("TRANSACTIONS : \n \n");
 			if (foundTransactions.isEmpty())
 			{
-				System.out.println("No Transaction added yet ");
+				System.out.println("Transactions not available ");
 			}	
 			else {
 					System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");

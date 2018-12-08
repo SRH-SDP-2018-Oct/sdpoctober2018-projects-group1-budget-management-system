@@ -55,6 +55,8 @@ public class BudgetPortal
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
 		printSeparator(55);
+		System.out.println("\n REGISTER");
+		printSeparator(55);
 		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
 		userDetails.setFirstName(scanner.nextLine());
 		
@@ -122,7 +124,8 @@ public class BudgetPortal
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("\n REGISTER");
+		printSeparator(55);
+		System.out.println("\n FORGOT YOUR PASSWORD");
 		printSeparator(55);
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
@@ -131,6 +134,7 @@ public class BudgetPortal
 		String answer=scanner.nextLine();
 		
 		con.forgotPasswordDbConnection(email, answer);
+	
 		scanner.close();
 		
 	}
@@ -174,7 +178,7 @@ public class BudgetPortal
 				System.out.println("Please Select the Type of Display" );
 				System.out.println("1 : Display All");
 				System.out.println("2 : Display by Month ");
-                System.out.println("3 : Charts \n");
+                System.out.println("3 : Charts ");
             	printSeparator(55);
 				System.out.println("Go For :");
 				Scanner scan_1 = new Scanner(System.in);

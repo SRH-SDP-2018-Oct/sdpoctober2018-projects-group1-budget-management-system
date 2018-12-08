@@ -29,7 +29,7 @@ public class TransactionDAOImpl {
 		List<BankVO> bankDetails = getUserBankId(currentAccountId);
 		
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("\nOption number:");
+		System.out.println("\nGo For :");
 		int option=scanner.nextInt();		
 		
 		int bank_id= bankDetails.get(option-1).getBank_id();
@@ -37,17 +37,17 @@ public class TransactionDAOImpl {
 		
 		TransactionVO transactionDetails = new TransactionVO();
 		//Scanner scanner = new Scanner(System.in);
-		
-		System.out.println("Please enter your transaction details:");
-		System.out.println("Transaction Name (ex: Shopping/Food/Banking/Party)");
+		BudgetPortal.printSeparator(55);
+		System.out.println("\nPlease enter your transaction details :");
+		System.out.println("\nTransaction Name - (ex: Shopping/Food/Banking/Party) :");
 		transactionDetails.setTransactionName(scanner.next());
 		
 		String transactionTypeCreditDebit;
 	
-		System.out.println("\nTransaction Amount");
+		System.out.println("\nTransaction Amount : ");
 		transactionDetails.setTransactionAmount(scanner.nextFloat());
 		
-		System.out.println("\nTransaction Type: (Credit or Debit?)");	
+		System.out.println("\nTransaction Type - (Credit or Debit?) : ");	
 		transactionTypeCreditDebit = scanner.next();
 		
 
@@ -55,13 +55,13 @@ public class TransactionDAOImpl {
 			transactionDetails.setUpdatedAccountBalance(balance-transactionDetails.getTransactionAmount());
 		else if(transactionTypeCreditDebit.startsWith("C") || transactionTypeCreditDebit.startsWith("c")) {
 			transactionDetails.setUpdatedAccountBalance(balance+transactionDetails.getTransactionAmount());
-			System.out.println("Balance:   "+balance+" Update::   "+transactionDetails.getUpdatedAccountBalance());
+			System.out.println("\n Previous Balance   :   "+balance+" \n * Updated Balance :   "+transactionDetails.getUpdatedAccountBalance());
 			}
 		else
-			System.out.println("Unable to recognize the transaction type. This transaction amount will not be reflected in your accounts total balance.");
+			System.out.println("\nUnable to recognize the transaction type. This transaction amount will not be reflected in your accounts total balance.");
 		
 		transactionDetails.setTransactionType(transactionTypeCreditDebit);
-		System.out.println("\nTransaction Date: ([DD-MM-YYYY])");
+		System.out.println("\nTransaction Date - ([DD-MM-YYYY]) :");
 		String transactionDate = scanner.next();
 					
 		try {
@@ -73,14 +73,14 @@ public class TransactionDAOImpl {
 			e.printStackTrace();
 		}	
 		
-		System.out.println("\nTransaction Time");
+		System.out.println("\nTransaction Time - (HH:MM) : ");
 		transactionDetails.setTransactionTime(scanner.next());
 		
-		System.out.println("\nMerchant Name");
+		System.out.println("\nMerchant Name : ");
 		transactionDetails.setMerchantName(scanner.next());
 	
 		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
-		System.out.println("Do you want to add another transaction? (Y / N)");
+		System.out.println("\nDo you want to add another transaction? (Y / N) : ");
 		if(scanner.next().equals("Y"))
 			transactionsInitialized(currentAccountId, username);
 		else
@@ -89,7 +89,7 @@ public class TransactionDAOImpl {
 	}
 	private List<BankVO> getUserBankId(int currentAccountId) {
 
-		System.out.println("Please enter the IBAN option number under which you want the transaction to be linked");
+		System.out.println("\nPlease enter the IBAN option number under which you want the transaction to be linked : ");
 		List<BankVO> bankDetailsList = new ArrayList<BankVO>();
 		try {
 			Statement stmt = con.createStatement();
@@ -108,7 +108,7 @@ public class TransactionDAOImpl {
 			int counter = 0;
 			for (int i=0; i<  bankDetailsList.size(); i++ ) {
 				counter++;
-				System.out.print(counter+")   IBAN:" + bankDetailsList.get(i).getIban_num()+"   Balance:"+bankDetailsList.get(i).getBalance()+"\n");
+				System.out.print("\n"+counter+":   IBAN -" + bankDetailsList.get(i).getIban_num()+"   Balance :"+bankDetailsList.get(i).getBalance()+"\n");
 			}
 			
 		return bankDetailsList;

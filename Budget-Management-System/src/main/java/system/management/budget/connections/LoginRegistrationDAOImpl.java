@@ -81,14 +81,13 @@ public class LoginRegistrationDAOImpl {
 				if(emailId.equals(email)) {
 					String securityAnswer= rs.getString("recovery_answer");
 					if(securityAnswer.equals(recoveryAnswer)) {
-						do {	
-							System.out.println("\n");	
-							System.out.println("Please enter your new password:");
+						do {		
+							System.out.println("\nPlease enter your new password:");
 							password=scanner.nextLine();
-							System.out.println("Please reenter your password");
+							System.out.println("\nPlease reenter your password");
 							reenteredPassword=scanner.nextLine();
 							if(!password.equals(reenteredPassword)) {
-								System.out.println("Your password doesn't match. Please enter again");
+								System.out.println("\nYour password doesn't match. Please enter again");
 							}
 						}
 						while(!password.equals(reenteredPassword));
@@ -98,6 +97,7 @@ public class LoginRegistrationDAOImpl {
 							updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
 							//updatestmt.setString(1,reenteredPassword);
 							//updatestmt.executeQuery();
+							System.out.println("\nYour password has been updated , Please Login again .");
 							updatestmt.close();
 						
 						scanner.close();

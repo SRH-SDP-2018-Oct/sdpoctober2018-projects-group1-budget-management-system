@@ -17,15 +17,18 @@ public class AddRemoveBankOrSubscription {
 	static Connection con = db.dbConnect();
 	
 	public static void menu(int account_id, String username) {
-		System.out.println(" **********  Menu Options  ********** ");
-		System.out.println(" 1 : Add Bank Account				  ");
-		System.out.println(" 2 : Add Subscription				  ");
-		System.out.println(" 3 : Delete Bank Account		  	  ");
-		System.out.println(" 4 : Delete Subscription			  ");
-		System.out.println(" 5 : Previous	 					  ");
-		System.out.println(" ************************************ ");
+		System.out.println("\n");
+		System.out.println("*******************  Menu Options  *******************");
+		System.out.println(" 1 : Add Bank Account				  				  ");
+		System.out.println(" 2 : Add Subscription				  				  ");
+		System.out.println(" 3 : Delete Bank Account		  	  				  ");
+		System.out.println(" 4 : Delete Subscription			  				  ");
+		System.out.println(" 5 : Previous	 					  				  ");
+		BudgetPortal.printSeparator(55);
+		System.out.println("Go For :");
 		Scanner scan = new Scanner(System.in);
 		int choice = scan.nextInt();
+		BudgetPortal.printSeparator(55);
 	
 		switch (choice){
 		case 1 :
@@ -55,16 +58,17 @@ public class AddRemoveBankOrSubscription {
 		System.out.println("Add a new bank account\n");
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("Enter your IBAN Number: ");
+		System.out.print("Enter your IBAN Number : ");
 		String iban = scanner.next();
 		
-		System.out.print("Enter your bank name: ");
+		System.out.print("\nEnter your bank name : ");
 		String bank_name = scanner.next();
 		
 		System.out.print("\nEnter your Account Balance euros: ");
 		float balance = scanner.nextFloat();
 		
 		boolean rtnValue = checkIban(account_id, iban, balance, bank_name);
+		BudgetPortal.printSeparator(55);
 		if (rtnValue) {
 			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
 			BudgetPortal.viewDashboard(account_id, username);
@@ -79,29 +83,30 @@ public class AddRemoveBankOrSubscription {
 		
 		try {
 			Scanner scanner = new Scanner(System.in);
-			System.out.print("Enter the name of the subscription (ie Netflix): ");
+			System.out.print("\nEnter the name of the subscription (ie Netflix): ");
 			String subName = scanner.next();
 			
-			System.out.print("Enter start date in format [DD-MM-YYYY]: ");	
+			System.out.print("\nEnter start date in format [DD-MM-YYYY]: ");	
 			String startDateString = scanner.next();
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date1 = sdf1.parse(startDateString);
 			java.sql.Date startDateSQL = new java.sql.Date(date1.getTime());
 			
-			System.out.print("Enter start end in format [DD-MM-YYYY]: ");
+			System.out.print("\nEnter start end in format [DD-MM-YYYY]: ");
 			String endDateString = scanner.next();
 			SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date2 = sdf2.parse(endDateString);
 			java.sql.Date endDateSQL = new java.sql.Date(date2.getTime());	
 
 			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL); //This is duplicated in the addbank function
-			
+			BudgetPortal.printSeparator(55);
 			if (rtnValue) {
-				System.out.print("\nSuccesfully added subscription!\nName: "+ subName + "\nFrom: "+ startDateSQL + " to "+ endDateSQL);
+				System.out.print("Succesfully added subscription!\nName: "+ subName + "\nFrom: "+ startDateSQL + " to "+ endDateSQL);
 				BudgetPortal.viewDashboard(account_id, username);
 			} else {
 				System.out.print("Error adding account.\n");
 			}
+			BudgetPortal.printSeparator(55);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,11 +173,12 @@ public class AddRemoveBankOrSubscription {
 
 	public static boolean removeBank(int account_id, String username) {
 		
-		System.out.println("Select which account you would like to delete: ");
+		System.out.println("Select which account you would like to delete: \n ");
 		try {
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery(db.bankCheck + account_id);
 			boolean deleted = listGenerator(rs,true,account_id,username);
+			BudgetPortal.printSeparator(55);
 			if (deleted == true) {
 				System.out.print("Successfully removed bank account!\n");
 				BudgetPortal.viewDashboard(account_id, username);
@@ -185,11 +191,12 @@ public class AddRemoveBankOrSubscription {
 	
 	public static boolean removeSubscription(int account_id, String username) {
 		
-		System.out.println("Select which subscription you would like to delete: ");
+		System.out.println("Select which subscription you would like to delete: \n ");
 		try {
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery(db.subCheck + account_id);
 			boolean deleted = listGenerator(rs,false,account_id,username);
+			BudgetPortal.printSeparator(55);
 			if (deleted == true) {
 				System.out.print("Successfully removed subscription!\n");
 				BudgetPortal.viewDashboard(account_id, username);
@@ -216,12 +223,15 @@ public class AddRemoveBankOrSubscription {
 			int counter = 0;
 			for (int i=0; i<  tempList.size(); i++ ) {
 				counter++;
-				System.out.print(counter+") " + tempList.get(i)+" - ");
 				if (bank == true) {
+					System.out.print(counter+" : " + tempList.get(i)+" - ");
 					System.out.print(bankNameList.get(i)+"\n");
 				}
+				else {
+					System.out.print(counter+" : " + tempList.get(i)+"\n");
+				}
 			if (counter == tempList.size()) {
-				System.out.print((counter+1)+") Back to Menu\n");
+				System.out.print((counter+1)+" : Back to Menu\n");
 				}
 			}
 			return deleter(bank, account_id, username, tempList );
@@ -234,13 +244,13 @@ public class AddRemoveBankOrSubscription {
 	private static boolean deleter(boolean bank, int account_id, String username, List<String> list) {
 		try{
 			Scanner scanner = new Scanner(System.in);
-			System.out.print("Selection: ");
+			System.out.print("\nSelection : ");
 			int choice = scanner.nextInt();
 			if (choice == list.size()+1) {
 				BudgetPortal.viewDashboard(account_id, username);
 			}
 			String toBeDeleted = list.get(choice-1);
-			System.out.print("Are you sure you want to delete the account: " + toBeDeleted +"\n(Y or N): ");
+			System.out.print("\n Are you sure you want to delete the account: " + toBeDeleted +"\n (Y or N) : ");
 			String confirmation = scanner.next();
 			if (confirmation.equals("Y") == false && confirmation.equals("y") == false) {
 				menu(account_id, username);

@@ -39,12 +39,15 @@ public class CurrentBalance implements TransactionDetails {
 	
 	public boolean showCurrentBalance(List <BankVO> foundBalances) {
 		try {
-			
+			System.out.print("\n");
+			System.out.print(" DASHBOARD \n");
+			BudgetPortal.printSeparator(55);
 			if (foundBalances.isEmpty())
 			{
 		    	System.out.println("No Bank Account added yet ");
 			}
 			else {
+				System.out.print("\n");
 				System.out.print("CURRENT ACCOUNT BALANCES : \n \n");
 				System.out.println("------------------------------------------------------------------------");
 				System.out.printf("%20s %20s %20s", "NAME", "IBAN", "BALANCE");

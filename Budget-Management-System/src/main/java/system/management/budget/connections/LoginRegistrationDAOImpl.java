@@ -65,7 +65,7 @@ public class LoginRegistrationDAOImpl {
 		}
 		return false;
 	}
-	public void forgotPasswordDbConnection(String email,String recoveryAnswer) {
+	public boolean forgotPasswordDbConnection(String email,String recoveryAnswer) {
 		
 		try {
 			String password;
@@ -82,12 +82,12 @@ public class LoginRegistrationDAOImpl {
 					String securityAnswer= rs.getString("recovery_answer");
 					if(securityAnswer.equals(recoveryAnswer)) {
 						do {		
-							System.out.println("\nPlease enter your new password:");
+							System.out.println("\nPlease enter your new password : ");
 							password=scanner.nextLine();
-							System.out.println("\nPlease reenter your password");
+							System.out.println("\nPlease reenter your password : ");
 							reenteredPassword=scanner.nextLine();
 							if(!password.equals(reenteredPassword)) {
-								System.out.println("\nYour password doesn't match. Please enter again");
+								System.out.println("\nYour password doesn't match. Please enter again. \n");
 							}
 						}
 						while(!password.equals(reenteredPassword));
@@ -97,19 +97,23 @@ public class LoginRegistrationDAOImpl {
 							updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
 							//updatestmt.setString(1,reenteredPassword);
 							//updatestmt.executeQuery();
-							System.out.println("\nYour password has been updated , Please Login again .");
+							System.out.println("\nYour password has been updated , Please Login again.\n");
 							updatestmt.close();
 						
-						scanner.close();
 					
+						return true;
+					}
+					else {
+						System.out.println("\nYour answer doesn't match. Please enter again. \n");
+						return false;
 					}
 				}
 					
 			}
-			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return false;
 	}
 }

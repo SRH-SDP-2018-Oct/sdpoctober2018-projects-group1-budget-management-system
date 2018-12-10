@@ -85,8 +85,8 @@ public class BudgetPortal
 		con.registrationDbConnection(userDetails);
 		printSeparator(55);
 		clearScreen();
-		System.out.println("Registration successful !!! ... You may proceed to login.");
-		userLogin(con);
+		System.out.println("Registration successful !!! ... You may proceed to login.\n");
+		proceedToPortal();
 	}
 
 	public static void userLogin(LoginRegistrationDAOImpl con) {
@@ -119,10 +119,11 @@ public class BudgetPortal
 			System.out.println("Login failed.\n\n Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
 			userLogin(con); //Recursive function.
 		}
-		scanner.close();
+		//scanner.close();
 	}
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
+
 		Scanner scanner = new Scanner(System.in);
 		printSeparator(55);
 		System.out.println("\n FORGOT YOUR PASSWORD");
@@ -134,9 +135,9 @@ public class BudgetPortal
 		String answer=scanner.nextLine();
 		
 		con.forgotPasswordDbConnection(email, answer);
+		proceedToPortal();	
 	
-		scanner.close();
-		
+	
 	}
 	
 	private static void clearScreen() {  

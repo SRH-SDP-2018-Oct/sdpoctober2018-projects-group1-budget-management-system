@@ -30,7 +30,11 @@ public class TransactionDAOImpl {
 		
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nGo For :");
-		int option=scanner.nextInt();		
+		int option=scanner.nextInt();	
+		
+		if(option == 0) {
+			BudgetPortal.viewDashboard(currentAccountId,username);
+		} else {
 		
 		int bank_id= bankDetails.get(option-1).getBank_id();
 		float balance = bankDetails.get(option-1).getBalance();
@@ -86,10 +90,11 @@ public class TransactionDAOImpl {
 	
 		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
 		System.out.println("\nDo you want to add another transaction? (Y / N) : ");
-		if(scanner.next().equals("Y"))
+		if(scanner.next().equals("Y") || scanner.next().equals("y") )
 			transactionsInitialized(currentAccountId, username);
 		else
 			BudgetPortal.viewDashboard(currentAccountId,username);
+		}
 			
 	}
 	private List<BankVO> getUserBankId(int currentAccountId) {
@@ -111,9 +116,10 @@ public class TransactionDAOImpl {
 			}
 			
 			int counter = 0;
+			System.out.println("\n0 :   Go Back to Dashboard ");
 			for (int i=0; i<  bankDetailsList.size(); i++ ) {
 				counter++;
-				System.out.print("\n"+counter+":   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
+				System.out.print("\n"+counter+" :   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
 			}
 			
 		return bankDetailsList;

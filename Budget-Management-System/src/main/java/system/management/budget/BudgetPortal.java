@@ -55,34 +55,45 @@ public class BudgetPortal
 	}
 
 	public static void userRegistration(LoginRegistrationDAOImpl con) {
+		String firstName,lastName,emailId,gender,password,recPwd;
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
 		printSeparator(55);
-		System.out.println("\n REGISTER");
+		System.out.println("\n REGISTER				  0 : Go back");
 		printSeparator(55);
-		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME:");
-		userDetails.setFirstName(scanner.nextLine());
-		
-		System.out.println("\nLAST NAME:");
-		userDetails.setLastName(scanner.nextLine());
+		System.out.println("\nPlease provide the below metioned details to register. \n\nFIRST NAME : ");
+		firstName = scanner.nextLine();
+		goBackToPortal(firstName);
+		userDetails.setFirstName(firstName);
+
+		System.out.println("\nLAST NAME : ");
+		lastName = scanner.nextLine();
+		goBackToPortal(lastName);
+		userDetails.setLastName(lastName);
 		
 		do{
-			System.out.println("\nEMAIL ADDRESS:");
-			userDetails.setEmailID(scanner.nextLine());
+			System.out.println("\nEMAIL ADDRESS : ");
+			emailId = scanner.nextLine();
+			goBackToPortal(emailId);
+			userDetails.setEmailID(emailId);
 			
 				if(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."))
 					System.out.println("Please enter a valid email address.");
 		}while(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."));
 		
 		
-		System.out.println("\nGENDER");
-		userDetails.setGender(scanner.nextLine());
+		System.out.println("\nGENDER : ");
+		gender = scanner.nextLine();
+		goBackToPortal(gender);
+		userDetails.setGender(gender);
 		
-		System.out.println("\nPASSWORD");
-		userDetails.setPassword(scanner.nextLine());
+		System.out.println("\nPASSWORD : ");
+		password = scanner.nextLine();
+		goBackToPortal(password);
+		userDetails.setPassword(password);
 		
 		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
-				+ "\n\nWhat is the last name of the teacher who failed you?:");
+				+ "\n\nWhat is the name of your birth place? : ");
 		userDetails.setRecoveryAnswer(scanner.nextLine());
 	
 		con.registrationDbConnection(userDetails);
@@ -93,16 +104,19 @@ public class BudgetPortal
 	}
 
 	public static void userLogin(LoginRegistrationDAOImpl con) {
+		String username,pass;
+		
 		Scanner scanner = new Scanner(System.in);
 		printSeparator(55);
-		System.out.println("\n LOGIN");
+		System.out.println("\n LOGIN     				  0 : Go back");
 		printSeparator(55);
-		System.out.println("\nEnter your Email-ID: ");
-		String username = scanner.nextLine();
-
+		
+		System.out.println("\nEnter your Email-ID : ");
+		username = scanner.nextLine();
+		goBackToPortal(username);
+		
 		Console c = System.console();
-		String pass;
-		System.out.println("\nEnter password: ");
+		System.out.println("\nEnter password : ");
 		
 		if(c!=null) {
 			
@@ -113,29 +127,40 @@ public class BudgetPortal
 			//Password input for eclipse console
 			pass = scanner.nextLine();
 		}
-
+		goBackToPortal(pass);
+		
 		int currentAccountId = con.createConnection(username, pass);
-	
 		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {
 			System.out.println("Login failed.\n\n Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
 			userLogin(con); //Recursive function.
 		}
-		//scanner.close();
+		scanner.close();
+	}
+	
+	public static void goBackToPortal(String forTextfield) {
+		if(forTextfield.equals("0")) {
+			proceedToPortal();
+		}
 	}
 	
 	public static void userForgotPassword(LoginRegistrationDAOImpl con) {
-
+		String email,answer;
+		
 		Scanner scanner = new Scanner(System.in);
 		printSeparator(55);
-		System.out.println("\n FORGOT YOUR PASSWORD");
+		System.out.println("\n FORGOT YOUR PASSWORD			  0 : Go back");
 		printSeparator(55);
-		System.out.println("Please enter your email address:");
-		String email=scanner.nextLine();
+		
+		System.out.println("Please enter your email address :");
+		email=scanner.nextLine();
+		goBackToPortal(email);
+		
 		System.out.println("\n");
-		System.out.println("What is the name of your birth place?:");
-		String answer=scanner.nextLine();
+        System.out.println("What is the name of your birth place? : ");
+		answer=scanner.nextLine();
+		goBackToPortal(answer);
 		
 		con.forgotPasswordDbConnection(email, answer);
 		proceedToPortal();	

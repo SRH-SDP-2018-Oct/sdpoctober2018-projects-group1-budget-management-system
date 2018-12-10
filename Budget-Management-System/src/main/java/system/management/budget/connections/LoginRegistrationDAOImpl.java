@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 
 import org.apache.log4j.Logger;
+
+import system.management.budget.BudgetPortal;
 import system.management.budget.valueObjects.UserRegistrationVO;
 
 
@@ -58,8 +60,7 @@ public class LoginRegistrationDAOImpl {
 			stmt.execute();
 			stmt.close();
 			return true;
-			
-			//System.out.println(registrationResult);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,6 +85,7 @@ public class LoginRegistrationDAOImpl {
 						do {		
 							System.out.println("\nPlease enter your new password : ");
 							password=scanner.nextLine();
+							BudgetPortal.goBackToPortal(password);
 							System.out.println("\nPlease reenter your password : ");
 							reenteredPassword=scanner.nextLine();
 							if(!password.equals(reenteredPassword)) {
@@ -92,11 +94,8 @@ public class LoginRegistrationDAOImpl {
 						}
 						while(!password.equals(reenteredPassword));
 						
-							//PreparedStatement updatestmt= con.prepareStatement("UPDATE ACCOUNT SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
 							Statement updatestmt = con.createStatement();
 							updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");
-							//updatestmt.setString(1,reenteredPassword);
-							//updatestmt.executeQuery();
 							System.out.println("\nYour password has been updated , Please Login again.\n");
 							updatestmt.close();
 						

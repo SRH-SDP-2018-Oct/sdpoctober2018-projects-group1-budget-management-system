@@ -23,7 +23,7 @@ public class AddRemoveBankOrSubscription {
 		System.out.println(" 2 : Add Subscription				  				  ");
 		System.out.println(" 3 : Delete Bank Account		  	  				  ");
 		System.out.println(" 4 : Delete Subscription			  				  ");
-		System.out.println(" 5 : Previous	 					  				  ");
+		System.out.println(" 5 : Go Back to Dashboard			  				  ");
 		BudgetPortal.printSeparator(55);
 		System.out.println("Go For :");
 		Scanner scan = new Scanner(System.in);

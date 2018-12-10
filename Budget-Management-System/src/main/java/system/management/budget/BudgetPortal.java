@@ -157,6 +157,7 @@ public class BudgetPortal
 	}
 	
 	public static void viewDashboard(int currentAccountId, String username) {
+		try {
 		
 		TransactionDAOImpl transactions = new TransactionDAOImpl();
 		
@@ -295,12 +296,18 @@ public class BudgetPortal
 				proceedToPortal();
 				break; 
 				
-		default: System.out.println("Invalid Input");
-		
+		default: 
+			System.out.println("Please select a valid input");
+			viewDashboard(currentAccountId, username);		
 		}
 		
-		scanner.close();
 		
+		scanner.close();
+		}
+		catch(Exception e) {
+			System.out.println("Please select a valid input");
+			viewDashboard(currentAccountId, username);	
+		}
 	}	
 
 }

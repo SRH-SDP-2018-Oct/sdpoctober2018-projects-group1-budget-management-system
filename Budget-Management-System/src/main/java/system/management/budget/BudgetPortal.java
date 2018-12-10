@@ -1,6 +1,8 @@
 package system.management.budget;
 
 import java.io.Console;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 
@@ -47,6 +49,7 @@ public class BudgetPortal
 			userForgotPassword(con);
 		else {
 			System.out.println("\nPlease enter a valid number.");
+			proceedToPortal();
 		}
 		scanner.close();
 	}
@@ -164,10 +167,10 @@ public class BudgetPortal
 		System.out.println("1 : Dashboard");
 		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
 		System.out.println("3 : Adding a Transaction");
-		System.out.println("4 : Expense Tracker");
-		System.out.println("5 : Notifications");
-		System.out.println("6 : Reports");
-		System.out.println("7 : Logout");
+		//System.out.println("4 : Expense Tracker");
+		System.out.println("4 : Notifications");
+		System.out.println("5 : Reports");
+		System.out.println("6 : Logout");
 		printSeparator(55);
 		System.out.println("Go For :");
 		Scanner scanner = new Scanner(System.in);
@@ -200,13 +203,20 @@ public class BudgetPortal
 						break;
 				 
 				case 2 :  
-						System.out.println("Please Select a Month (1 - 12) :");
-				 		Scanner scan_month = new Scanner(System.in);
-				 		int MonthSelected = scan_month.nextInt();
-				 		
-				 		System.out.println("Please Select a Year ( YYYY ) :");
-				 		Scanner scan_year = new Scanner (System.in);
-				 		int YearSelected = scan_year.nextInt();
+					int MonthSelected=0;
+					int YearSelected = 0;
+					Scanner scan = new Scanner(System.in);
+						do {						
+							try {
+								System.out.println("Please Select a Month (1 - 12) :");								
+								MonthSelected = scan.nextInt();
+								System.out.println("Please Select a Year ( YYYY ) :");
+								YearSelected = scan.nextInt();
+							} catch (Exception e) {
+								System.out.println("Please enter a valid month or year.");
+							}
+							scan.nextLine(); // clears the buffer
+						} while (MonthSelected <= 0 || YearSelected <=0);
 				 		
 				 		DashboardDaoImpl dashboardViewForCurrentBalance2  = new DashboardDaoImpl(new CurrentBalance());
 				 		dashboardViewForCurrentBalance2.budgetTransactionType(currentAccountId);
@@ -252,20 +262,35 @@ public class BudgetPortal
 		case 3:	transactions.transactionsInitialized(currentAccountId,username);
 			 	break;
 			 	
-		case 5: System.out.println("Notifications \n");
+		case 4: System.out.println("Notifications \n");
 				NotificationsDAOImpl.getNotifications(currentAccountId);
 				BudgetPortal.viewDashboard(currentAccountId, username);
 				break;
 
-		case 6: System.out.println("\nFrom date (yyyy:mm:dd)");
-				String customDateReportGenerationTo = scanner.nextLine();
-				System.out.println("\nFrom date (yyyy:mm:dd)");
-				String customDateReportGenerationFrom = scanner.nextLine();
+		case 5: 	
+			
+			try {
 				GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
-				report.generateReport(customDateReportGenerationTo, customDateReportGenerationFrom);
-				break; // Is this redundant?
+				System.out.print("\nFrom date ([DD-MM-YYYY]) :");
+				String FromDateString = scanner.next();
+				System.out.print("\nTo date ([DD-MM-YYYY]) :");
+				String ToDateString = scanner.next();
+				SimpleDateFormat FromDate = new SimpleDateFormat("dd-MM-yyyy");
+				java.util.Date FromDateJava = FromDate.parse(FromDateString);
+				java.sql.Date FromDateSQL = new java.sql.Date(FromDateJava.getTime());
 				
-		case 7: 
+				
+				java.util.Date ToDateJava = FromDate.parse(ToDateString);
+				java.sql.Date ToDateSQL = new java.sql.Date(ToDateJava.getTime());
+				report.generateReport(FromDateSQL, ToDateSQL);
+				viewDashboard(currentAccountId, username);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+				break; 
+				
+		case 6: 
 				clearScreen();
 				proceedToPortal();
 				break; 

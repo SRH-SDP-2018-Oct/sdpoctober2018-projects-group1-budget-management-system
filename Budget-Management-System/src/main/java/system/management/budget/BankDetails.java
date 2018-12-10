@@ -38,7 +38,7 @@ public class BankDetails implements TransactionDetails {
 		return false;
 	}
 	
-	public boolean getTransactionByDate(int currentAccountId, int MonthSelected , int YearSelected ) {
+	public boolean getTransactionByDate(int currentAccountId, int MonthSelected , String YearSelected ) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
 			try {

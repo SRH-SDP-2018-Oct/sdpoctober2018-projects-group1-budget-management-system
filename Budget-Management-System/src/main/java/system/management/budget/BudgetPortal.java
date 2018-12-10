@@ -209,6 +209,7 @@ public class BudgetPortal
 				System.out.println("1 : Display All");
 				System.out.println("2 : Display by Month ");
                 System.out.println("3 : Charts ");
+                System.out.println("4 : Go Back to Dashboard ");
             	printSeparator(55);
 				System.out.println("Go For :");
 				Scanner scan_1 = new Scanner(System.in);
@@ -229,20 +230,20 @@ public class BudgetPortal
 						break;
 				 
 				case 2 :  
-					int MonthSelected=0;
-					int YearSelected = 0;
-					Scanner scan = new Scanner(System.in);
+						int MonthSelected = 0;
+						String YearSelected = "";
+						Scanner scan = new Scanner(System.in);
 						do {						
 							try {
 								System.out.println("Please Select a Month (1 - 12) :");								
 								MonthSelected = scan.nextInt();
 								System.out.println("Please Select a Year ( YYYY ) :");
-								YearSelected = scan.nextInt();
+								 YearSelected = scan.next();
 							} catch (Exception e) {
 								System.out.println("Please enter a valid month or year.");
 							}
 							scan.nextLine(); // clears the buffer
-						} while (MonthSelected <= 0 || YearSelected <=0);
+						} while (MonthSelected <= 0 ||  !YearSelected.matches("([0-9]{4})"));
 				 		
 				 		DashboardDaoImpl dashboardViewForCurrentBalance2  = new DashboardDaoImpl(new CurrentBalance());
 				 		dashboardViewForCurrentBalance2.budgetTransactionType(currentAccountId);
@@ -271,9 +272,11 @@ public class BudgetPortal
                                  frame.getContentPane().add(cp);
                                  BudgetPortal.viewDashboard(currentAccountId, username);
                                  break;
-                                 
+                    
                         default : System.out.println("Invalid Input");
                 		}
+                		
+                case 4 : BudgetPortal.viewDashboard(currentAccountId,username);		
 
 				default : System.out.println("Invalid Input");
 			

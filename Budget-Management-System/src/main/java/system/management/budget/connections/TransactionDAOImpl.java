@@ -43,10 +43,14 @@ public class TransactionDAOImpl {
 		transactionDetails.setTransactionName(scanner.next());
 		
 		String transactionTypeCreditDebit;
-	
-		System.out.println("\nTransaction Amount : ");
-		transactionDetails.setTransactionAmount(scanner.nextFloat());
-		
+		try {
+			System.out.println("\nTransaction Amount : ");
+			transactionDetails.setTransactionAmount(scanner.nextFloat());
+		}
+		catch(Exception e) {
+			System.out.println("Please enter a valid amount.");
+			transactionsInitialized(currentAccountId, username);
+		}
 		System.out.println("\nTransaction Type - (Credit or Debit?) : ");	
 		transactionTypeCreditDebit = scanner.next();
 		
@@ -69,8 +73,9 @@ public class TransactionDAOImpl {
 			java.util.Date date1 = transactionDateFormat.parse(transactionDate);
 			transactionDetails.setTransactionDate(new java.sql.Date(date1.getTime()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("\nThe date entered is not in the correct format. Please reinitialize the transaction.");
+			transactionsInitialized(currentAccountId, username);
+			
 		}	
 		
 		System.out.println("\nTransaction Time - (HH:MM) : ");
@@ -108,7 +113,7 @@ public class TransactionDAOImpl {
 			int counter = 0;
 			for (int i=0; i<  bankDetailsList.size(); i++ ) {
 				counter++;
-				System.out.print("\n"+counter+":   IBAN -" + bankDetailsList.get(i).getIban_num()+"   Balance :"+bankDetailsList.get(i).getBalance()+"\n");
+				System.out.print("\n"+counter+":   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
 			}
 			
 		return bankDetailsList;

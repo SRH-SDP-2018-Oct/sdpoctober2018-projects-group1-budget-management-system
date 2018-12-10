@@ -15,7 +15,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class GenarateCustomReportDAOImpl {
 	
-	public void generateReport(String customDateReportTo,String customDateReportFrom){
+	public void generateReport(java.sql.Date customDateReportTo,java.sql.Date customDateReportFrom){
 		try {
 			ResultSet rs = null;
 				
@@ -24,7 +24,7 @@ public class GenarateCustomReportDAOImpl {
 			
 			Statement stmt = con.createStatement();
 			
-			rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN '"+ customDateReportTo +"' and '"+ customDateReportFrom +"'");
+			rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportFrom +"' and  '"+ customDateReportTo +"'");
 			FastReportBuilder drb = new FastReportBuilder();
 			DynamicReport dr = drb.addColumn("Merchant Name", "merchant_name", String.class.getName(), 30)
 					.addColumn("Transaction Name", "transaction_name", String.class.getName(), 30)

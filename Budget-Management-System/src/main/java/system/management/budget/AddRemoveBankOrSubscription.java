@@ -63,18 +63,22 @@ public class AddRemoveBankOrSubscription {
 		
 		System.out.print("\nEnter your bank name : ");
 		String bank_name = scanner.next();
-		
-		System.out.print("\nEnter your Account Balance euros: ");
-		float balance = scanner.nextFloat();
-		
-		boolean rtnValue = checkIban(account_id, iban, balance, bank_name);
-		BudgetPortal.printSeparator(55);
-		if (rtnValue) {
-			System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
-			BudgetPortal.viewDashboard(account_id, username);
-		} else {
-			System.out.print("Please Try again with a different IBAN.\n");
-			scanner.reset();
+		try {
+			System.out.print("\nEnter your Account Balance euros: ");
+			float balance = scanner.nextFloat();
+			boolean rtnValue = checkIban(account_id, iban, balance, bank_name);
+			BudgetPortal.printSeparator(55);
+			if (rtnValue) {
+				System.out.print("\nSuccesfully added account!\nIBAN: "+ iban + "\nBalance: EUROS "+ balance +"\n");
+				BudgetPortal.viewDashboard(account_id, username);
+			} else {
+				System.out.print("Please Try again with a different IBAN.\n");
+				scanner.reset();
+				getUserBankDetails(account_id, username);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.print("******* Invalid input *******\n");
 			getUserBankDetails(account_id, username);
 		}
 	}
@@ -96,7 +100,14 @@ public class AddRemoveBankOrSubscription {
 			String endDateString = scanner.next();
 			SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date date2 = sdf2.parse(endDateString);
-			java.sql.Date endDateSQL = new java.sql.Date(date2.getTime());	
+			java.sql.Date endDateSQL = new java.sql.Date(date2.getTime());
+			
+			String valid = "(?:(?:31(-)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(-)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(-)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(-)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
+			//String year = "(\\d{4})$";
+			if(startDateString.matches(valid) == false | endDateString.matches(valid) == false ) {
+				System.out.print("******* Invalid input *******\n");
+				getUserSubscriptionDetails(account_id, username);
+			}
 
 			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL); //This is duplicated in the addbank function
 			BudgetPortal.printSeparator(55);
@@ -110,6 +121,8 @@ public class AddRemoveBankOrSubscription {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.print("******* Invalid input *******\n");
+			getUserSubscriptionDetails(account_id, username);
 		}
 	}
 	
@@ -178,13 +191,14 @@ public class AddRemoveBankOrSubscription {
 			Statement qStmt = con.createStatement();
 			ResultSet rs = qStmt.executeQuery(db.bankCheck + account_id);
 			boolean deleted = listGenerator(rs,true,account_id,username);
-			BudgetPortal.printSeparator(55);
 			if (deleted == true) {
 				System.out.print("Successfully removed bank account!\n");
 				BudgetPortal.viewDashboard(account_id, username);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.print("******* Invalid input *******\n");
+			removeBank(account_id, username);
 		}
 		return false;
 	}
@@ -208,7 +222,7 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	private static boolean listGenerator(ResultSet rs, boolean bank, int account_id, String username) {
+	public static boolean listGenerator(ResultSet rs, boolean bank, int account_id, String username) {
 		try {
 			List<String> tempList = new ArrayList<String>();
 			List<String> bankNameList = new ArrayList<String>();
@@ -223,15 +237,12 @@ public class AddRemoveBankOrSubscription {
 			int counter = 0;
 			for (int i=0; i<  tempList.size(); i++ ) {
 				counter++;
+				System.out.print(counter+") " + tempList.get(i)+" - ");
 				if (bank == true) {
-					System.out.print(counter+" : " + tempList.get(i)+" - ");
 					System.out.print(bankNameList.get(i)+"\n");
 				}
-				else {
-					System.out.print(counter+" : " + tempList.get(i)+"\n");
-				}
 			if (counter == tempList.size()) {
-				System.out.print((counter+1)+" : Back to Menu\n");
+				System.out.print((counter+1)+") Back to Menu\n");
 				}
 			}
 			return deleter(bank, account_id, username, tempList );
@@ -241,7 +252,7 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	private static boolean deleter(boolean bank, int account_id, String username, List<String> list) {
+	public static boolean deleter(boolean bank, int account_id, String username, List<String> list) {
 		try{
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("\nSelection : ");
@@ -270,10 +281,10 @@ public class AddRemoveBankOrSubscription {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.out.print("******* Invalid input *******\n");
+				removeSubscription(account_id, username);
 			}
 		return false;
 		}
 
 }//Class
-
-

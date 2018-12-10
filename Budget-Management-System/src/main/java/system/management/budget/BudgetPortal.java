@@ -134,7 +134,7 @@ public class BudgetPortal
 		System.out.println("Please enter your email address:");
 		String email=scanner.nextLine();
 		System.out.println("\n");
-		System.out.println("What is the last name of the teacher who failed you?:");
+		System.out.println("What is the name of your birth place?:");
 		String answer=scanner.nextLine();
 		
 		con.forgotPasswordDbConnection(email, answer);

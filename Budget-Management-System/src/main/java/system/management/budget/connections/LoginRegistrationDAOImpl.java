@@ -1,5 +1,6 @@
 package system.management.budget.connections;
 
+import java.io.Console;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -119,7 +120,16 @@ public class LoginRegistrationDAOImpl {
 							password=scanner.nextLine();
 							BudgetPortal.goBackToPortal(password);
 							System.out.println("\nPlease reenter your password : ");
-							reenteredPassword=scanner.nextLine();
+							Console c = System.console();
+							if(c!=null) {
+								
+								char[] ch = c.readPassword();
+								reenteredPassword = String.valueOf(ch);// converting char array into string
+							}
+							else {
+								//Password input for eclipse console
+								reenteredPassword=scanner.nextLine();
+							}
 							if(!password.equals(reenteredPassword)) {
 								System.out.println("\nYour password doesn't match. Please enter again. \n");
 							}

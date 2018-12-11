@@ -55,7 +55,7 @@ public class BudgetPortal
 	}
 
 	public static void userRegistration(LoginRegistrationDAOImpl con) {
-		String firstName,lastName,emailId,gender,password,recPwd;
+		String firstName,lastName,emailId,gender,password;
 		boolean isValidEmailId = false;
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
@@ -180,8 +180,13 @@ public class BudgetPortal
 		answer=scanner.nextLine();
 		goBackToPortal(answer);
 		
-		con.forgotPasswordDbConnection(email, answer);
-		proceedToPortal();	
+		boolean result = con.forgotPasswordDbConnection(email, answer);
+		if(result)
+			proceedToPortal();	
+		else {
+			System.out.println("\nYour answer doesn't match. Please enter again. \n");
+			userForgotPassword(con);
+		}
 	
 	
 	}
@@ -301,7 +306,7 @@ public class BudgetPortal
             
                 		case 1 : JFreeChart chart = DashboardDaoImpl.createMonthlySpendingBarChart(currentAccountId);
                 				ChartPanel cp = new ChartPanel(chart);
-                				JFrame frame = new JFrame("Bar Chart");
+                				JFrame frame = new JFrame("Overall Spending Bar Chart");
                 				
                 				frame.setSize(600, 400); 
                 				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -311,7 +316,7 @@ public class BudgetPortal
                 				break;
                 		case 2 : JFreeChart PieChart = DashboardDaoImpl.createCategoryPieChart(currentAccountId);
                 				ChartPanel PC = new ChartPanel(PieChart);
-                				JFrame PieFrame = new JFrame("Pie Chart");
+                				JFrame PieFrame = new JFrame("Overall Spending Pie Chart ");
                 				
                 				PieFrame.setSize(600, 400);
                 				PieFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

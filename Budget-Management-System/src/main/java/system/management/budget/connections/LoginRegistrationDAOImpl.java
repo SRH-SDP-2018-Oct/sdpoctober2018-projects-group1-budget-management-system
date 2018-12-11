@@ -154,7 +154,6 @@ public class LoginRegistrationDAOImpl {
 						return true;
 					}
 					else {
-						System.out.println("\nYour answer doesn't match. Please enter again. \n");
 						return false;
 					}
 				}

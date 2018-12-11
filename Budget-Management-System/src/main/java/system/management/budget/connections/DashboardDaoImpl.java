@@ -45,7 +45,7 @@ public class DashboardDaoImpl {
 	        	String months = rs.getString("Months");	        
 	            dataset.addValue(amount, "Amount", months);
 	        }
-	        JFreeChart chart = ChartFactory.createBarChart("Monthly Spending", "Months", "Amount", dataset, PlotOrientation.VERTICAL, false, true, false);
+	        JFreeChart chart = ChartFactory.createBarChart("Overall Spending By Month", "Months", "Amount", dataset, PlotOrientation.VERTICAL, false, true, false);
 	       
 	        return chart;	        	       	     
 		}
@@ -72,7 +72,7 @@ public class DashboardDaoImpl {
 	        	String category = rs.getString("Category");	        
 	            dataset.setValue(category, amount);
 	        }
-	        JFreeChart chart = ChartFactory.createPieChart("Pie Chart", dataset, true, true, false);
+	        JFreeChart chart = ChartFactory.createPieChart("Overall Spending By Category", dataset, true, true, false);
 	        PiePlot plot = (PiePlot)chart.getPlot();
 	        plot.setNoDataMessage("Data Not Available");
 	        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{1}€ / {2}"));

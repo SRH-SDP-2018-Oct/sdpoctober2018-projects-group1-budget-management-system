@@ -133,7 +133,6 @@ public class AddRemoveBankOrSubscription {
 			BudgetPortal.printSeparator(55);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			System.out.print("******* Invalid input *******\n");
 			getUserSubscriptionDetails(account_id, username);
 		}

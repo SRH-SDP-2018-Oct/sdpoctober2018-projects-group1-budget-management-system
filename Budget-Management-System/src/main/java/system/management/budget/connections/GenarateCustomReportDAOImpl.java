@@ -34,7 +34,7 @@ public class GenarateCustomReportDAOImpl {
 			
 			Statement stmt = con.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"' and account_id ='"+ currentAccountId +"'" );
+			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"' and account_id ='"+ currentAccountId +"'ORDER BY transaction_date DESC, transaction_time DESC" );
 			
 			FastReportBuilder drb = new FastReportBuilder();
 			DynamicReport dr = drb.addColumn("Merchant Name", "merchant_name", String.class.getName(), 30)

@@ -66,9 +66,12 @@ public class AddRemoveBankOrSubscription {
 		
 		System.out.print("Enter your IBAN Number : ");
 		String iban = scanner.next();
-		
+		scanner.nextLine();
+		/*That's because the Scanner.nextInt method does not read the newline character in your input created by hitting "Enter," and so the call to Scanner.nextLine returns after reading that newline.
+
+		You will encounter the similar behavior when you use Scanner.nextLine after Scanner.next() or any Scanner.nextFoo method (except nextLine itself).*/
 		System.out.print("\nEnter your bank name : ");
-		String bank_name = scanner.next();
+		String bank_name = scanner.nextLine();
 		try {
 			System.out.print("\nEnter your Account Balance euros: ");
 			float balance = scanner.nextFloat();
@@ -94,7 +97,7 @@ public class AddRemoveBankOrSubscription {
 		try {
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("\nEnter the name of the subscription (ie Netflix): ");
-			String subName = scanner.next();
+			String subName = scanner.nextLine();
 			
 			System.out.print("\nEnter start date in format [DD-MM-YYYY]: ");	
 			String startDateString = scanner.next();

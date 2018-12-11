@@ -255,25 +255,35 @@ public class BudgetPortal
 						
                 case 3 : 
                 		System.out.println("Choose the Chart you want to display : ");
-                		System.out.println("1 : Monthly Spending \n");
+                		System.out.println("1 : Overall Spending By Month ");
+                		System.out.println("2 : Overall Spending By Category  \n");
                 		System.out.println("Go For :");
                 		printSeparator(55);
                 		Scanner scan_chart = new Scanner(System.in);        
                 		int chart_selected = scan_chart.nextInt();
                 		switch (chart_selected)  {
-                
-                        case 1 : JFreeChart chart = DashboardDaoImpl.createMonthlySpendingBarChart(currentAccountId);
-                                 ChartPanel cp = new ChartPanel(chart);
-                                 JFrame frame = new JFrame("Bar Chart");
-
-                                 frame.setSize(600, 400);
-                                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                                 frame.setVisible(true);
-                                 frame.getContentPane().add(cp);
-                                 BudgetPortal.viewDashboard(currentAccountId, username);
-                                 break;
-                    
-                        default : System.out.println("Invalid Input");
+            
+                		case 1 : JFreeChart chart = DashboardDaoImpl.createMonthlySpendingBarChart(currentAccountId);
+                				ChartPanel cp = new ChartPanel(chart);
+                				JFrame frame = new JFrame("Bar Chart");
+                				
+                				frame.setSize(600, 400); 
+                				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                				frame.setVisible(true);
+                				frame.getContentPane().add(cp);
+                				BudgetPortal.viewDashboard(currentAccountId, username);
+                				break;
+                		case 2 : JFreeChart PieChart = DashboardDaoImpl.createCategoryPieChart(currentAccountId);
+                				ChartPanel PC = new ChartPanel(PieChart);
+                				JFrame PieFrame = new JFrame("Pie Chart");
+                				
+                				PieFrame.setSize(600, 400);
+                				PieFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                				PieFrame.setVisible(true);
+                				PieFrame.getContentPane().add(PC);
+                    		 	BudgetPortal.viewDashboard(currentAccountId, username);
+                    		 	break;        
+                		default : System.out.println("Invalid Input");
                 		}
                 		
                 case 4 : BudgetPortal.viewDashboard(currentAccountId,username);		

@@ -36,6 +36,7 @@ public class TransactionDAOImpl {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nGo For :");
 		int option=scanner.nextInt();	
+		BudgetPortal.printSeparator(55);
 		scanner.nextLine();
 		if(option == 0) {
 			BudgetPortal.viewDashboard(currentAccountId,username);
@@ -45,6 +46,8 @@ public class TransactionDAOImpl {
 		float balance = bankDetails.get(option-1).getBalance();
 		
 		int userCategoryID = getUserCategory();
+		BudgetPortal.printSeparator(55);
+
 		
 		TransactionVO transactionDetails = new TransactionVO();
 		BudgetPortal.printSeparator(55);
@@ -126,7 +129,11 @@ public class TransactionDAOImpl {
 				System.out.print("\n" + categoryList.get(i).getCategoryId() + " :   "
 						+ categoryList.get(i).getCategoryName() + "\n");
 			}
+			
+			System.out.println("\nGo For :");
 			Scanner scanner = new Scanner(System.in);
+			
+			
 			while (!userCategorySelection) {
 				option = scanner.nextInt();
 				if (0 < option && option < 9) {
@@ -173,9 +180,9 @@ public class TransactionDAOImpl {
 			System.out.println("\n0 :   Go Back to Dashboard ");
 			for (int i=0; i<  bankDetailsList.size(); i++ ) {
 				counter++;
-				System.out.print("\n"+counter+" :   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
+				System.out.print("\n"+counter+" :   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+" EUR\n");
 			}
-			
+			BudgetPortal.printSeparator(55);
 			return bankDetailsList;
 		} catch (Exception e) {
 

@@ -107,7 +107,7 @@ public class BankDetails implements TransactionDetails {
 					System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
 					for (int i = 0; i < foundTransactions.size() ; i++ ) {
 						System.out.format("%10s %15s %20s %30s %20s %20s %10s %10s %10s",
-						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getBank_name(), foundTransactions.get(i).getIban_num(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),"€" );
+						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getBank_name(), foundTransactions.get(i).getIban_num(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),"EUR" );
 						System.out.println();
 						System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
 					}

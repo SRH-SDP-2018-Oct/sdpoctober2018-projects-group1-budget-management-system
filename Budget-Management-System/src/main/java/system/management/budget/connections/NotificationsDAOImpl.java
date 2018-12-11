@@ -34,7 +34,7 @@ public class NotificationsDAOImpl {
 		try {			
 			for (int i = 0; i < foundTransactions.size() ; i++ ) {
 				System.out.println("----------------------------------------------------------------------------------------------------------");
-		        System.out.println("At "+foundTransactions.get(i).getTransaction_time() + ", you recently bought " + foundTransactions.get(i).getTransaction_name() +" on the : " + foundTransactions.get(i).getTransaction_date() + " and the total amount spent was : " + foundTransactions.get(i).getTransaction_amount() +" €");
+		        System.out.println("At "+foundTransactions.get(i).getTransaction_time() + ", you recently bought " + foundTransactions.get(i).getTransaction_name() +" on the : " + foundTransactions.get(i).getTransaction_date() + " and the total amount spent was : " + foundTransactions.get(i).getTransaction_amount() +" EUR");
 				System.out.println("----------------------------------------------------------------------------------------------------------");
 			}
 		}

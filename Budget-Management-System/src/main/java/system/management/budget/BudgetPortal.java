@@ -256,7 +256,9 @@ public class BudgetPortal
                 case 3 : 
                 		System.out.println("Choose the Chart you want to display : ");
                 		System.out.println("1 : Overall Spending By Month ");
-                		System.out.println("2 : Overall Spending By Category  \n");
+                		System.out.println("2 : Overall Spending By Category ");
+                		System.out.println("3 : Go Back to Dashboard  \n");
+                		
                 		System.out.println("Go For :");
                 		printSeparator(55);
                 		Scanner scan_chart = new Scanner(System.in);        
@@ -282,7 +284,11 @@ public class BudgetPortal
                 				PieFrame.setVisible(true);
                 				PieFrame.getContentPane().add(PC);
                     		 	BudgetPortal.viewDashboard(currentAccountId, username);
-                    		 	break;        
+                    		 	break; 
+                    		 	 
+                		case 3 : BudgetPortal.viewDashboard(currentAccountId, username);
+                				 break;
+                				 
                 		default : System.out.println("Invalid Input");
                 		}
                 		

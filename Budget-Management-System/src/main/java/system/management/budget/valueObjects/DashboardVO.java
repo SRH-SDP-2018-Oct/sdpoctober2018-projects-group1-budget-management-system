@@ -17,7 +17,7 @@ public class DashboardVO {
 	private String iban_num;
 	private String bank_name;
 	
-	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String bank_name,String iban_num, String transaction_type,Double transaction_amount,String currency )
+	public DashboardVO(String transaction_time,Date transaction_date, String transaction_name,String merchant_name,String bank_name,String iban_num, String transaction_type,Double transaction_amount )
 	{
 	    this.transaction_time = transaction_time;
 	    this.transaction_date = transaction_date;
@@ -27,15 +27,15 @@ public class DashboardVO {
 	    this.iban_num = iban_num;
 	    this.transaction_type = transaction_type;
 	    this.transaction_amount = transaction_amount;
-	    this.currency = currency;
+	  
 	}
 	
-	public DashboardVO(Date transaction_date, String transaction_name, double transaction_amount, String currency)
+	public DashboardVO(String transaction_time, Date transaction_date, String transaction_name, double transaction_amount)
 	{
+		this.transaction_time = transaction_time;
 		this.transaction_date = transaction_date;
 		this.transaction_name = transaction_name;
 		this.transaction_amount = transaction_amount;
-	    this.currency = currency;
 		
 	}
 	

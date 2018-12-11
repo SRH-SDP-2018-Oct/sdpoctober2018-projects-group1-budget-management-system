@@ -34,7 +34,7 @@ public class BankDetails implements TransactionDetails {
 		
 				while(rs.next()) 
 				{
-					trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
+					trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"));
 					foundTransactions.add(trans_row);	
 				}
 		
@@ -64,12 +64,12 @@ public class BankDetails implements TransactionDetails {
 	    			con = dataSource.getConnection();
 	    			
 					Statement qStmt = con.createStatement();
-					qStmt.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'AND Month(transaction_date) ='" + MonthSelected + "'AND Year(transaction_date) ='" + YearSelected + "'");
+					qStmt.execute("Select DISTINCT b.bank_name, b.iban_num, t.* FROM Transactions t INNER JOIN (SELECT bank.* FROM BANK,Transactions WHERE transactions.account_id= bank.account_id = '"+ currentAccountId +"' )b ON t.bank_id = b.bank_id WHERE Month(t.transaction_date) ='" + MonthSelected + "'AND Year(t.transaction_date) ='" + YearSelected + "'");
 					ResultSet rs = qStmt.getResultSet();
 		
 					while(rs.next()) 
 					{
-						trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"),rs.getString("currency"));
+						trans_row = new DashboardVO(rs.getString("transaction_time"),rs.getDate("transaction_date"),rs.getString("transaction_name"),rs.getString("merchant_name"),rs.getString("bank_name"),rs.getString("iban_num"),rs.getString("transaction_type"),rs.getDouble("transaction_amount"));
 						foundTransactions.add(trans_row);	
 					}
 		
@@ -107,7 +107,7 @@ public class BankDetails implements TransactionDetails {
 					System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
 					for (int i = 0; i < foundTransactions.size() ; i++ ) {
 						System.out.format("%10s %15s %20s %30s %20s %20s %10s %10s %10s",
-						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getBank_name(), foundTransactions.get(i).getIban_num(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),foundTransactions.get(i).getCurrency()  );
+						foundTransactions.get(i).getTransaction_time(), foundTransactions.get(i).getTransaction_date(), foundTransactions.get(i).getTransaction_name(), foundTransactions.get(i).getMerchant_name(), foundTransactions.get(i).getBank_name(), foundTransactions.get(i).getIban_num(), foundTransactions.get(i).getTransaction_type(),foundTransactions.get(i).getTransaction_amount(),"€" );
 						System.out.println();
 						System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------");
 					}

@@ -94,7 +94,7 @@ public class TransactionDAOImpl {
 	
 		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
 		System.out.println("\nDo you want to add another transaction? (Y / N) : ");
-		if(scanner.next().equals("Y") || scanner.next().equals("y") )
+		if(scanner.next().equals("Y"))
 			transactionsInitialized(currentAccountId, username);
 		else
 			BudgetPortal.viewDashboard(currentAccountId,username);

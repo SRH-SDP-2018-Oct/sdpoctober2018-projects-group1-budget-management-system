@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 
 import system.management.budget.BudgetPortal;
 import system.management.budget.valueObjects.BankVO;
+import system.management.budget.valueObjects.CategoryVO;
 import system.management.budget.valueObjects.TransactionVO;
 
 public class TransactionDAOImpl {
@@ -42,6 +43,8 @@ public class TransactionDAOImpl {
 		
 		int bank_id= bankDetails.get(option-1).getBank_id();
 		float balance = bankDetails.get(option-1).getBalance();
+		
+		int userCategoryID = getUserCategory();
 		
 		TransactionVO transactionDetails = new TransactionVO();
 		//Scanner scanner = new Scanner(System.in);
@@ -92,7 +95,7 @@ public class TransactionDAOImpl {
 		System.out.println("\nMerchant Name : ");
 		transactionDetails.setMerchantName(scanner.nextLine());
 	
-		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
+		addTransactionToDb(currentAccountId, bank_id, transactionDetails, userCategoryID);
 		System.out.println("\nDo you want to add another transaction? (Y / N) : ");
 		if(scanner.next().equals("Y"))
 			transactionsInitialized(currentAccountId, username);
@@ -100,6 +103,51 @@ public class TransactionDAOImpl {
 			BudgetPortal.viewDashboard(currentAccountId,username);
 		}
 			
+	}
+	private int getUserCategory() {
+		try {
+		dataSource = jdbcObj.setUpPool();
+		
+		con = dataSource.getConnection();
+		
+		Statement stmt = con.createStatement();
+
+		ResultSet rsForCatagories = stmt.executeQuery("SELECT * FROM CATEGORY");
+		CategoryVO category;
+		List<CategoryVO> categoryList = new ArrayList<CategoryVO>();
+		int option=0;
+		boolean userCategorySelection=false;
+			while (rsForCatagories.next()) {
+				category = new CategoryVO(rsForCatagories.getInt("category_id"),
+						rsForCatagories.getString("category_name"));
+				categoryList.add(category);
+			}
+			System.out.println("Please select the category under which you want this transaction to be mapped.");
+			for (int i = 0; i < categoryList.size(); i++) {
+				System.out.print("\n" + categoryList.get(i).getCategoryId() + " :   "
+						+ categoryList.get(i).getCategoryName() + "\n");
+			}
+			Scanner scanner = new Scanner(System.in);
+			while (!userCategorySelection) {
+				option = scanner.nextInt();
+				if (0 < option && option < 9) {
+					userCategorySelection = true;
+					return option;
+				} else
+					System.out.println("Please enter a valid category number");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
 	}
 	private List<BankVO> getUserBankId(int currentAccountId) {
 
@@ -112,7 +160,6 @@ public class TransactionDAOImpl {
     		
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Bank WHERE account_id='"+ currentAccountId +"'");
-			
 			//HashMap<Integer, String> bankDetails = new HashMap<Integer, String>();
 			
 			BankVO bankDetails;
@@ -129,7 +176,7 @@ public class TransactionDAOImpl {
 				counter++;
 				System.out.print("\n"+counter+" :   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
 			}
-
+			
 			return bankDetailsList;
 		} catch (Exception e) {
 
@@ -145,7 +192,7 @@ public class TransactionDAOImpl {
 		}
 		return bankDetailsList;
 	}
-	public boolean addTransactionToDb(int currentAccountID, int bank_id, TransactionVO transactionDetails) {
+	public boolean addTransactionToDb(int currentAccountID, int bank_id, TransactionVO transactionDetails, int userCategoryID) {
 		
 		try {
 			dataSource = jdbcObj.setUpPool();
@@ -155,12 +202,13 @@ public class TransactionDAOImpl {
 			PreparedStatement stmt = con.prepareStatement(jdbcObj.transactionsAdd);
 			stmt.setInt(1, currentAccountID);
 			stmt.setInt(2, bank_id);
-			stmt.setString(3, transactionDetails.getTransactionName());
-			stmt.setString(4, transactionDetails.getTransactionType());
-			stmt.setFloat(5, transactionDetails.getTransactionAmount());
-			stmt.setDate(6, transactionDetails.getTransactionDate());
-			stmt.setString(7, transactionDetails.getTransactionTime());
-			stmt.setString(8, transactionDetails.getMerchantName());
+			stmt.setInt(3, userCategoryID);
+			stmt.setString(4, transactionDetails.getTransactionName());
+			stmt.setString(5, transactionDetails.getTransactionType());
+			stmt.setFloat(6, transactionDetails.getTransactionAmount());
+			stmt.setDate(7, transactionDetails.getTransactionDate());
+			stmt.setString(8, transactionDetails.getTransactionTime());
+			stmt.setString(9, transactionDetails.getMerchantName());
 			
 			stmt.execute();
 			stmt.close();

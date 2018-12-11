@@ -299,25 +299,31 @@ public class BudgetPortal
 				break;
 
 		case 5: 	
-			
-			try {
-				GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
-				System.out.print("\nFrom date ([DD-MM-YYYY]) :");
-				String FromDateString = scanner.next();
-				System.out.print("\nTo date ([DD-MM-YYYY]) :");
-				String ToDateString = scanner.next();
-				SimpleDateFormat FromDate = new SimpleDateFormat("dd-MM-yyyy");
-				java.util.Date FromDateJava = FromDate.parse(FromDateString);
-				java.sql.Date FromDateSQL = new java.sql.Date(FromDateJava.getTime());
-				
-				
-				java.util.Date ToDateJava = FromDate.parse(ToDateString);
-				java.sql.Date ToDateSQL = new java.sql.Date(ToDateJava.getTime());
-				report.generateReport(FromDateSQL, ToDateSQL, currentAccountId);
+				boolean correctDateFormat = false;
+
+				do {
+					try {
+						GenarateCustomReportDAOImpl report = new GenarateCustomReportDAOImpl();
+						System.out.print("\nFrom date ([DD-MM-YYYY]) :");
+						String FromDateString = scanner.next();
+						System.out.print("\nTo date ([DD-MM-YYYY]) :");
+						String ToDateString = scanner.next();
+						SimpleDateFormat FromDate = new SimpleDateFormat("dd-MM-yyyy");
+						java.util.Date FromDateJava = FromDate.parse(FromDateString);
+						java.sql.Date FromDateSQL = new java.sql.Date(FromDateJava.getTime());
+						java.util.Date ToDateJava = FromDate.parse(ToDateString);
+						java.sql.Date ToDateSQL = new java.sql.Date(ToDateJava.getTime());
+
+						correctDateFormat = true;
+
+						report.generateReport(FromDateSQL, ToDateSQL, currentAccountId);
+					} catch (ParseException e) {
+						System.out.println("Please enter a valid date");
+					}
+				} while (!correctDateFormat);
+
 				viewDashboard(currentAccountId, username);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			
 			
 				break; 
 				

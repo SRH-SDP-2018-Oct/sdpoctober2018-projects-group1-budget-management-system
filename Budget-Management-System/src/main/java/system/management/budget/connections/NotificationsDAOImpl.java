@@ -1,12 +1,15 @@
 package system.management.budget.connections;
 import java.util.*;
+
+import org.apache.log4j.Logger;
+
 import java.sql.*;
 import system.management.budget.valueObjects.*;
 
 public class NotificationsDAOImpl {
 	static DatabaseConnect db = new DatabaseConnect();
 	static Connection con = db.dbConnect();
-	
+	final static Logger logger = Logger.getLogger(NotificationsDAOImpl.class);
 	public static boolean getNotifications (int currentAccountId) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
@@ -24,7 +27,7 @@ public class NotificationsDAOImpl {
 			return showNotifications(foundTransactions);
 			
 		}catch(Exception e){
-			System.out.println("Error" + e);
+			logger.error("Exception :"+e);
 		}
 		
 		return false;	
@@ -39,7 +42,7 @@ public class NotificationsDAOImpl {
 			}
 		}
 		catch(Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception :"+e);
 		}
 	  return false;
 		

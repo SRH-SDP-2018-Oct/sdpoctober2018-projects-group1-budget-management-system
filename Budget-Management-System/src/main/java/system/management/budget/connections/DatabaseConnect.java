@@ -12,9 +12,11 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
 
 public class DatabaseConnect {
 		
+	final static Logger logger = Logger.getLogger(DatabaseConnect.class);
 	
 	static Properties prop = new Properties();
     static InputStream input = null;
@@ -65,14 +67,6 @@ public class DatabaseConnect {
 
 	}
 	 
-	
-	    // This Method Is Used To Print The Connection Pool Status
-	
-	    /*public void printDbStatus() {
-	
-	        System.out.println("Max.: " + getConnectionPool().getMaxActive() + "; Active: " + getConnectionPool().getNumActive() + "; Idle: " + getConnectionPool().getNumIdle());
-	
-	    }*/
 		//Select queries
 		public String accSel = "SELECT * FROM Account"; 
 		public String bankSel = "SELECT * FROM Bank";
@@ -98,7 +92,7 @@ public class DatabaseConnect {
 			return con;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		}
 		return conFail;
 	}

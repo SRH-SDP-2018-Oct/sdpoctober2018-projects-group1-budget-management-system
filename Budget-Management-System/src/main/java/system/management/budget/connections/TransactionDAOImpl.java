@@ -16,6 +16,8 @@ import java.util.Scanner;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import system.management.budget.BudgetPortal;
 import system.management.budget.valueObjects.BankVO;
 import system.management.budget.valueObjects.CategoryVO;
@@ -28,6 +30,8 @@ public class TransactionDAOImpl {
 	DatabaseConnect jdbcObj = new DatabaseConnect();
 	
 	DataSource dataSource = null;
+	
+	final static Logger logger = Logger.getLogger(TransactionDAOImpl.class);
 	
 	public void transactionsInitialized(int currentAccountId, String username) {
 		
@@ -62,6 +66,7 @@ public class TransactionDAOImpl {
 			scanner.nextLine();
 		}
 		catch(Exception e) {
+			logger.error("Exception :"+e);
 			System.out.println("Please enter a valid amount.");
 			transactionsInitialized(currentAccountId, username);
 		}
@@ -87,6 +92,7 @@ public class TransactionDAOImpl {
 			java.util.Date date1 = transactionDateFormat.parse(transactionDate);
 			transactionDetails.setTransactionDate(new java.sql.Date(date1.getTime()));
 		} catch (ParseException e) {
+			logger.error("Exception :"+e);
 			System.out.println("\nThe date entered is not in the correct format. Please reinitialize the transaction.");
 			transactionsInitialized(currentAccountId, username);			
 		}	
@@ -143,14 +149,14 @@ public class TransactionDAOImpl {
 					System.out.println("Please enter a valid category number");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		} finally {
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return 0;
@@ -185,15 +191,14 @@ public class TransactionDAOImpl {
 			BudgetPortal.printSeparator(55);
 			return bankDetailsList;
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		}finally {
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return bankDetailsList;
@@ -227,14 +232,14 @@ public class TransactionDAOImpl {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		} finally {
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return false;

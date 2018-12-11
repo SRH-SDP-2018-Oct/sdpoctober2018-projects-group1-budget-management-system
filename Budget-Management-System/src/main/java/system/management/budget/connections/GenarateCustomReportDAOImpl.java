@@ -52,15 +52,15 @@ public class GenarateCustomReportDAOImpl {
 					resultsetdatasource);
 			JasperViewer.viewReport(jp,false);
 			stmt.close();
-		} catch (Exception ex) {
-			System.out.println(ex);
+		} catch (Exception e) {
+			logger.error("Exception :"+e);
 		}	finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 	}

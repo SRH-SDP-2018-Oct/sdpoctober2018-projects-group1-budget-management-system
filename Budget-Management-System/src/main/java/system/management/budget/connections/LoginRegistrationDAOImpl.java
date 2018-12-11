@@ -11,6 +11,7 @@ import java.util.Scanner;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 
 import system.management.budget.BudgetPortal;
 import system.management.budget.valueObjects.UserRegistrationVO;
@@ -18,13 +19,15 @@ import system.management.budget.valueObjects.UserRegistrationVO;
 
 public class LoginRegistrationDAOImpl {
 	
+	final static Logger logger = Logger.getLogger(LoginRegistrationDAOImpl.class);
+	
 	Connection con = null;
 	
 	DatabaseConnect jdbcObj = new DatabaseConnect();
 	
 	DataSource dataSource = null;
 	
-	public int createConnection(String username,String pass){
+	public int loginConnection(String username,String pass){
 		
     	try {
     		
@@ -51,14 +54,14 @@ public class LoginRegistrationDAOImpl {
 			stmt.close();
 			
     	} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		} finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return 0;
@@ -84,14 +87,14 @@ public class LoginRegistrationDAOImpl {
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return false;
@@ -161,14 +164,14 @@ public class LoginRegistrationDAOImpl {
 			}
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception :"+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception :"+e);
 			}
 		}
 		return false;

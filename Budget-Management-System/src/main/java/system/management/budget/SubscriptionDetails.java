@@ -8,11 +8,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.SubscriptionVO;
 
 public class SubscriptionDetails implements TransactionDetails {
 
+	final static Logger logger = Logger.getLogger(SubscriptionDetails.class);
+	
 	Connection con = null;
 
 	DatabaseConnect jdbcObj = new DatabaseConnect();
@@ -39,14 +43,14 @@ public class SubscriptionDetails implements TransactionDetails {
 			return showTransactions(foundSubscriptions);
 
 		} catch (Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception : "+e);
 		} finally {
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 
@@ -56,7 +60,7 @@ public class SubscriptionDetails implements TransactionDetails {
 
 	public boolean showTransactions(List<SubscriptionVO> showSubscriptions) {
 		try {
-				System.out.println("\n  SUBSCRIPTIONS :\n ");
+				System.out.println("\nSUBSCRIPTIONS :\n ");
 				if (showSubscriptions.isEmpty())
 				{
 					System.out.println("No Subscriptions added yet ");
@@ -76,7 +80,7 @@ public class SubscriptionDetails implements TransactionDetails {
 				
 			}
 		} catch (Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception : "+e);
 		}
 		return false;
 	}

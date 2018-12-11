@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -16,6 +18,8 @@ import system.management.budget.connections.*;
 
 public class AddRemoveBankOrSubscription {
 
+	final static Logger logger = Logger.getLogger(AddRemoveBankOrSubscription.class);
+	
 	Connection con = null;
 	
 	DatabaseConnect jdbcObj = new DatabaseConnect();
@@ -65,8 +69,7 @@ public class AddRemoveBankOrSubscription {
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("Enter your IBAN Number : ");
-		String iban = scanner.next();
-		scanner.nextLine();
+		String iban = scanner.nextLine();
 
 		System.out.print("\nEnter your bank name : ");
 		String bank_name = scanner.nextLine();
@@ -84,7 +87,7 @@ public class AddRemoveBankOrSubscription {
 				getUserBankDetails(account_id, username);
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 			System.out.print("******* Invalid input *******\n");
 			getUserBankDetails(account_id, username);
 		}
@@ -133,6 +136,7 @@ public class AddRemoveBankOrSubscription {
 			BudgetPortal.printSeparator(55);
 			
 		} catch (Exception e) {
+			logger.error("Exception : "+e);
 			System.out.print("******* Invalid input *******\n");
 			getUserSubscriptionDetails(account_id, username);
 		}
@@ -162,14 +166,14 @@ public class AddRemoveBankOrSubscription {
 				return addBank(account_id, iban, balance, bank_name);	
 			}		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		return false;
@@ -191,14 +195,14 @@ public class AddRemoveBankOrSubscription {
 			return true;
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		return false;
@@ -219,14 +223,14 @@ public class AddRemoveBankOrSubscription {
 			return true;
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		return false;
@@ -248,7 +252,7 @@ public class AddRemoveBankOrSubscription {
 				BudgetPortal.viewDashboard(account_id, username);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 			System.out.print("******* Invalid input *******\n");
 			removeBank(account_id, username);
 		}finally {
@@ -257,7 +261,7 @@ public class AddRemoveBankOrSubscription {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		return false;
@@ -281,14 +285,14 @@ public class AddRemoveBankOrSubscription {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		return false;
@@ -319,7 +323,7 @@ public class AddRemoveBankOrSubscription {
 			}
 			return deleter(bank, account_id, username, tempList );
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception : "+e);
 		}
 		return false;
 	}
@@ -355,7 +359,7 @@ public class AddRemoveBankOrSubscription {
 				return true;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 				System.out.print("******* Invalid input *******\n");
 				removeSubscription(account_id, username);
 			}finally {
@@ -364,7 +368,7 @@ public class AddRemoveBankOrSubscription {
 						con.close();
 					}
 				}catch(Exception e) {
-					e.printStackTrace();
+					logger.error("Exception : "+e);
 				}
 			}
 		return false;

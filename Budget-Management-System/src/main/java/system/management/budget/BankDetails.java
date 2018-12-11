@@ -8,12 +8,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.*;
 
 public class BankDetails implements TransactionDetails {
 
-
+	final static Logger logger = Logger.getLogger(BankDetails.class);
+	
 	Connection con = null;
 	
 	DatabaseConnect jdbcObj = new DatabaseConnect();
@@ -41,14 +44,14 @@ public class BankDetails implements TransactionDetails {
 			return showTransactions(foundTransactions);
 		
 		}catch(Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception : "+e);
 		}finally {
 			try {
 				if(con!=null) {
 					con.close();
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 		
@@ -77,14 +80,14 @@ public class BankDetails implements TransactionDetails {
 		
 			}
 			catch(Exception e) {
-				System.out.println("Error" + e);
+				logger.error("Exception : "+e);
 			}finally {
 				try {
 					if(con!=null) {
 						con.close();
 					}
 				}catch(Exception e) {
-					e.printStackTrace();
+					logger.error("Exception : "+e);
 				}
 			}
 	
@@ -116,7 +119,7 @@ public class BankDetails implements TransactionDetails {
 				}
 			}
 			catch(Exception e) {
-				System.out.println("Error" + e);	
+				logger.error("Exception : "+e);	
 			}
 		return false;	
 	}

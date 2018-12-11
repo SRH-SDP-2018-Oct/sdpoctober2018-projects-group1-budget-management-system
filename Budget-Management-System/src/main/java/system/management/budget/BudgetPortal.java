@@ -147,7 +147,7 @@ public class BudgetPortal
 		goBackToPortal(pass);
 
 		
-		int currentAccountId = con.createConnection(username, pass);
+		int currentAccountId = con.loginConnection(username, pass);
 		if(currentAccountId != 0)
 			viewDashboard(currentAccountId,username);
 		else {

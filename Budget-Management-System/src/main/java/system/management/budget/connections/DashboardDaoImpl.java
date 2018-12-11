@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -16,7 +17,7 @@ import org.jfree.chart.plot.PlotOrientation;
 
 
 public class DashboardDaoImpl {
-	
+	final static Logger logger = Logger.getLogger(DashboardDaoImpl.class);
 	static DatabaseConnect db = new DatabaseConnect();
 	static Connection con = db.dbConnect();
 	
@@ -50,7 +51,7 @@ public class DashboardDaoImpl {
 	        return chart;	        	       	     
 		}
 		catch (Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception :"+e);
 		}
 		
 		return empty;	
@@ -80,7 +81,7 @@ public class DashboardDaoImpl {
 	        return chart;	     
 		}
 		catch (Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception :"+e);
 		}
 		
 		return empty;	

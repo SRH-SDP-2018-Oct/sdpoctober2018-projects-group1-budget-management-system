@@ -8,11 +8,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.BankVO;
 
 public class CurrentBalance implements TransactionDetails {
 
+	final static Logger logger = Logger.getLogger(CurrentBalance.class);
+	
 	Connection con = null;
 
 	DatabaseConnect jdbcObj = new DatabaseConnect();
@@ -38,14 +42,14 @@ public class CurrentBalance implements TransactionDetails {
 			return showCurrentBalance(foundBalances);
 
 		} catch (Exception e) {
-			System.out.println("Error" + e);
+			logger.error("Exception : "+e);
 		} finally {
 			try {
 				if (con != null) {
 					con.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception : "+e);
 			}
 		}
 
@@ -78,7 +82,7 @@ public class CurrentBalance implements TransactionDetails {
 			}
 			}
 			catch(Exception e) {
-				System.out.println("Error" + e);	
+				logger.error("Exception : "+e);	
 			}
 		return false;	
 	}

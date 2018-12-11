@@ -56,6 +56,7 @@ public class BudgetPortal
 
 	public static void userRegistration(LoginRegistrationDAOImpl con) {
 		String firstName,lastName,emailId,gender,password,recPwd;
+		boolean isValidEmailId = false;
 		Scanner scanner = new Scanner(System.in);
 		UserRegistrationVO userDetails = new UserRegistrationVO();
 		printSeparator(55);
@@ -75,11 +76,18 @@ public class BudgetPortal
 			System.out.println("\nEMAIL ADDRESS : ");
 			emailId = scanner.nextLine();
 			goBackToPortal(emailId);
-			userDetails.setEmailID(emailId);
+			isValidEmailId = validateEmailId(emailId);
 			
-				if(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."))
+			
+				if(isValidEmailId) {
+					userDetails.setEmailID(emailId);
+				}
+				else {
+					
 					System.out.println("Please enter a valid email address.");
-		}while(!userDetails.getEmailID().contains("@") && !userDetails.getEmailID().contains("."));
+				}
+			
+		}while(!isValidEmailId);
 		
 		
 		System.out.println("\nGENDER : ");
@@ -188,17 +196,18 @@ public class BudgetPortal
 	
 	    String validationRegex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{5,10}";
 	    isValidPassword = password.matches(validationRegex); 
-	    return isValidPassword;
-//	    if(!isValidPassword) {
-//	    	System.out.println("Incorrect Password");
-//	    	
-//	    }
-//	    else
-//	    System.out.println("Password Correct");
-	    
-	 
-	
+	    return isValidPassword;	
 	}
+	
+	public static boolean validateEmailId(String emailId) {
+		boolean isValidEmailId = false;
+		
+		String emailValidationRegex = "\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b";
+		isValidEmailId = emailId.matches(emailValidationRegex);
+		
+		return isValidEmailId;
+	}
+	
 	public static void printSeparator(int count) {
 		System.out.print("\n");
 		for (int i=0; i<count; i++){

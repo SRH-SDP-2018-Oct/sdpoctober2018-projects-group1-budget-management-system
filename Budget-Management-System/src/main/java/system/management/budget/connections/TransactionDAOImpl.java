@@ -35,7 +35,7 @@ public class TransactionDAOImpl {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nGo For :");
 		int option=scanner.nextInt();	
-		
+		scanner.nextLine(); //for consuming the next line
 		if(option == 0) {
 			BudgetPortal.viewDashboard(currentAccountId,username);
 		} else {
@@ -48,19 +48,20 @@ public class TransactionDAOImpl {
 		BudgetPortal.printSeparator(55);
 		System.out.println("\nPlease enter your transaction details :");
 		System.out.println("\nTransaction Name - (ex: Shopping/Food/Banking/Party) :");
-		transactionDetails.setTransactionName(scanner.next());
+		transactionDetails.setTransactionName(scanner.nextLine());
 		
 		String transactionTypeCreditDebit;
 		try {
 			System.out.println("\nTransaction Amount : ");
 			transactionDetails.setTransactionAmount(scanner.nextFloat());
+			scanner.nextLine(); // consuming next line
 		}
 		catch(Exception e) {
 			System.out.println("Please enter a valid amount.");
 			transactionsInitialized(currentAccountId, username);
 		}
 		System.out.println("\nTransaction Type - (Credit or Debit?) : ");	
-		transactionTypeCreditDebit = scanner.next();
+		transactionTypeCreditDebit = scanner.nextLine();
 		
 
 		if(transactionTypeCreditDebit.startsWith("D") || transactionTypeCreditDebit.startsWith("d"))
@@ -74,7 +75,7 @@ public class TransactionDAOImpl {
 		
 		transactionDetails.setTransactionType(transactionTypeCreditDebit);
 		System.out.println("\nTransaction Date - ([DD-MM-YYYY]) :");
-		String transactionDate = scanner.next();
+		String transactionDate = scanner.nextLine();
 					
 		try {
 			SimpleDateFormat transactionDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -82,15 +83,14 @@ public class TransactionDAOImpl {
 			transactionDetails.setTransactionDate(new java.sql.Date(date1.getTime()));
 		} catch (ParseException e) {
 			System.out.println("\nThe date entered is not in the correct format. Please reinitialize the transaction.");
-			transactionsInitialized(currentAccountId, username);
-			
+			transactionsInitialized(currentAccountId, username);			
 		}	
 		
 		System.out.println("\nTransaction Time - (HH:MM) : ");
-		transactionDetails.setTransactionTime(scanner.next());
+		transactionDetails.setTransactionTime(scanner.nextLine());
 		
 		System.out.println("\nMerchant Name : ");
-		transactionDetails.setMerchantName(scanner.next());
+		transactionDetails.setMerchantName(scanner.nextLine());
 	
 		addTransactionToDb(currentAccountId, bank_id, transactionDetails);
 		System.out.println("\nDo you want to add another transaction? (Y / N) : ");

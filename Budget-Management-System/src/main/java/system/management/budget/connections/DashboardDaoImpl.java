@@ -46,16 +46,8 @@ public class DashboardDaoImpl {
 	            dataset.addValue(amount, "Amount", months);
 	        }
 	        JFreeChart chart = ChartFactory.createBarChart("Monthly Spending", "Months", "Amount", dataset, PlotOrientation.VERTICAL, false, true, false);
-	        return chart;
-	        
-//          Save Chart in a specific Folder :            
-//	        int width =640;
-//	        int height =480;
-//	        
-//	        File BarChart = new File("/Users/hamzasaib/desktop/output_chart_png");
-//	        ChartUtilities.saveChartAsPNG(BarChart,chart,width,height); 
-	        
-	     
+	       
+	        return chart;	        	       	     
 		}
 		catch (Exception e) {
 			System.out.println("Error" + e);
@@ -84,16 +76,8 @@ public class DashboardDaoImpl {
 	        PiePlot plot = (PiePlot)chart.getPlot();
 	        plot.setNoDataMessage("Data Not Available");
 	        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{1}€ / {2}"));
-	        return chart;
-	        
-//          Save Chart in a specific Folder :            
-//	        int width =640;
-//	        int height =480;
-//	        
-//	        File BarChart = new File("/Users/hamzasaib/desktop/output_chart_png");
-//	        ChartUtilities.saveChartAsPNG(BarChart,chart,width,height); 
-	        
-	     
+	       
+	        return chart;	     
 		}
 		catch (Exception e) {
 			System.out.println("Error" + e);

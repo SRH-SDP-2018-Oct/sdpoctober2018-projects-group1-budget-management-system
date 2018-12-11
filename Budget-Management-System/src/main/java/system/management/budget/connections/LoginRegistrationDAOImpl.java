@@ -71,7 +71,7 @@ public class LoginRegistrationDAOImpl {
 			
 			con = dataSource.getConnection();
 			
-			//PreparedStatement stmt = con.prepareStatement(jdbcObj.accountAdd);
+
 			PreparedStatement stmt = con.prepareStatement(jdbcObj.accountAdd);
 			stmt.setString(1, userDetails.getEmailID());
 			stmt.setString(2, userDetails.getFirstName());
@@ -128,10 +128,10 @@ public class LoginRegistrationDAOImpl {
 								if(c!=null) {
 									
 									char[] ch = c.readPassword();
-									reenteredPassword = String.valueOf(ch);// converting char array into string
+									reenteredPassword = String.valueOf(ch);
 								}
 								else {
-									//Password input for eclipse console
+
 									reenteredPassword=scanner.nextLine();
 								}
 

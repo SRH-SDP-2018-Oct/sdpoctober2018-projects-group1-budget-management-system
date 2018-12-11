@@ -33,7 +33,7 @@ public class GenarateCustomReportDAOImpl {
 			con = dataSource.getConnection();
 			
 			Statement stmt = con.createStatement();
-			//logger.info("Generating Report");
+			
 			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"' and account_id ='"+ currentAccountId +"'" );
 			
 			FastReportBuilder drb = new FastReportBuilder();
@@ -50,7 +50,7 @@ public class GenarateCustomReportDAOImpl {
 																						
 			JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr, new ClassicLayoutManager(),
 					resultsetdatasource);
-			JasperViewer.viewReport(jp,false); // finally display the report report
+			JasperViewer.viewReport(jp,false);
 			stmt.close();
 		} catch (Exception ex) {
 			System.out.println(ex);

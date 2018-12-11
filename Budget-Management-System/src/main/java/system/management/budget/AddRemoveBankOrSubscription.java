@@ -67,9 +67,7 @@ public class AddRemoveBankOrSubscription {
 		System.out.print("Enter your IBAN Number : ");
 		String iban = scanner.next();
 		scanner.nextLine();
-		/*That's because the Scanner.nextInt method does not read the newline character in your input created by hitting "Enter," and so the call to Scanner.nextLine returns after reading that newline.
 
-		You will encounter the similar behavior when you use Scanner.nextLine after Scanner.next() or any Scanner.nextFoo method (except nextLine itself).*/
 		System.out.print("\nEnter your bank name : ");
 		String bank_name = scanner.nextLine();
 		try {
@@ -124,7 +122,7 @@ public class AddRemoveBankOrSubscription {
 				getUserSubscriptionDetails(account_id, username);
 			}
 
-			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL); //This is duplicated in the addbank function
+			boolean rtnValue = addSubscription(account_id, subName, startDateSQL, endDateSQL); 
 			BudgetPortal.printSeparator(55);
 			if (rtnValue) {
 				System.out.print("Succesfully added subscription!\nName: "+ subName + "\nFrom: "+ startDateSQL + " to "+ endDateSQL);

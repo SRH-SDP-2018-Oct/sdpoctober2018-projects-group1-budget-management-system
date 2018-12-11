@@ -36,7 +36,7 @@ public class TransactionDAOImpl {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nGo For :");
 		int option=scanner.nextInt();	
-		scanner.nextLine(); //for consuming the next line
+		scanner.nextLine();
 		if(option == 0) {
 			BudgetPortal.viewDashboard(currentAccountId,username);
 		} else {
@@ -47,7 +47,6 @@ public class TransactionDAOImpl {
 		int userCategoryID = getUserCategory();
 		
 		TransactionVO transactionDetails = new TransactionVO();
-		//Scanner scanner = new Scanner(System.in);
 		BudgetPortal.printSeparator(55);
 		System.out.println("\nPlease enter your transaction details :");
 		System.out.println("\nTransaction Name - (ex: Shopping/Food/Banking/Party) :");
@@ -57,7 +56,7 @@ public class TransactionDAOImpl {
 		try {
 			System.out.println("\nTransaction Amount : ");
 			transactionDetails.setTransactionAmount(scanner.nextFloat());
-			scanner.nextLine(); // consuming next line
+			scanner.nextLine();
 		}
 		catch(Exception e) {
 			System.out.println("Please enter a valid amount.");
@@ -160,7 +159,7 @@ public class TransactionDAOImpl {
     		
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Bank WHERE account_id='"+ currentAccountId +"'");
-			//HashMap<Integer, String> bankDetails = new HashMap<Integer, String>();
+
 			
 			BankVO bankDetails;
 			while(rs.next()) {
@@ -220,7 +219,7 @@ public class TransactionDAOImpl {
 			return true;
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} finally {
 			try {

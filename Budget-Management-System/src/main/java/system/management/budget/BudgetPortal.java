@@ -138,10 +138,10 @@ public class BudgetPortal
 		if(c!=null) {
 			
 			char[] ch = c.readPassword();
-			pass = String.valueOf(ch);// converting char array into string
+			pass = String.valueOf(ch);
 		}
 		else {
-			//Password input for eclipse console
+			
 			pass = scanner.nextLine();
 		}
 		goBackToPortal(pass);
@@ -152,7 +152,7 @@ public class BudgetPortal
 			viewDashboard(currentAccountId,username);
 		else {
 			System.out.println("Login failed.\n\n Either the Email-ID or password is incorrect. \n\nPlease enter the details again.");
-			userLogin(con); //Recursive function.
+			userLogin(con);
 		}
 		scanner.close();
 	}
@@ -228,7 +228,6 @@ public class BudgetPortal
 		System.out.println("1 : Dashboard");
 		System.out.println("2 : Add Or Delete - Bank Account/ Subscription");
 		System.out.println("3 : Adding a Transaction");
-		//System.out.println("4 : Expense Tracker");
 		System.out.println("4 : Notifications");
 		System.out.println("5 : Reports");
 		System.out.println("6 : Logout");
@@ -242,8 +241,8 @@ public class BudgetPortal
 		case 1:
 				System.out.println("Please Select the Type of Display" );
 				System.out.println("1 : Display All");
-				System.out.println("2 : Display by Month ");
-                System.out.println("3 : Charts ");
+				System.out.println("2 : Display for a Specific Month ");
+                System.out.println("3 : Graphical Charts ");
                 System.out.println("4 : Go Back to Dashboard ");
             	printSeparator(55);
 				System.out.println("Go For :");
@@ -277,7 +276,7 @@ public class BudgetPortal
 							} catch (Exception e) {
 								System.out.println("Please enter a valid month or year.");
 							}
-							scan.nextLine(); // clears the buffer
+							scan.nextLine();
 						} while (MonthSelected <= 0 ||  !YearSelected.matches("([0-9]{4})"));
 				 		
 				 		DashboardDaoImpl dashboardViewForCurrentBalance2  = new DashboardDaoImpl(new CurrentBalance());

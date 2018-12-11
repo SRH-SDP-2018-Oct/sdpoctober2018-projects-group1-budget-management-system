@@ -87,10 +87,19 @@ public class BudgetPortal
 		goBackToPortal(gender);
 		userDetails.setGender(gender);
 		
-		System.out.println("\nPASSWORD : ");
-		password = scanner.nextLine();
-		goBackToPortal(password);
-		userDetails.setPassword(password);
+		
+		do{
+			System.out.println("\nPASSWORD : ");
+			password = scanner.nextLine();		
+			goBackToPortal(password);
+			if (validatePassword(password) == false) {
+				System.out.println("Your password must contain at least 5 characters, 1 Upper Case, 1 Number and 1 Special Character ! \n"); 
+			} 	
+			else {					
+				userDetails.setPassword(password);
+			}
+		} while (!validatePassword(password));
+		
 		
 		System.out.println("\nTO RETRIVE YOU ACCOUNT INCASE YOU FORGET YOUR PASSWORD, PLEASE ANSWER THE SECURITY QUESTION BELOW."
 				+ "\n\nWhat is the name of your birth place? : ");
@@ -128,6 +137,7 @@ public class BudgetPortal
 			pass = scanner.nextLine();
 		}
 		goBackToPortal(pass);
+
 		
 		int currentAccountId = con.createConnection(username, pass);
 		if(currentAccountId != 0)
@@ -173,6 +183,22 @@ public class BudgetPortal
 	    System.out.flush();  
 	}
 	
+	public static boolean validatePassword(String password) {	
+		boolean isValidPassword = false;
+	
+	    String validationRegex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{5,10}";
+	    isValidPassword = password.matches(validationRegex); 
+	    return isValidPassword;
+//	    if(!isValidPassword) {
+//	    	System.out.println("Incorrect Password");
+//	    	
+//	    }
+//	    else
+//	    System.out.println("Password Correct");
+	    
+	 
+	
+	}
 	public static void printSeparator(int count) {
 		System.out.print("\n");
 		for (int i=0; i<count; i++){

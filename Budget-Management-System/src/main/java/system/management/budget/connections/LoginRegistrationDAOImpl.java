@@ -100,7 +100,8 @@ public class LoginRegistrationDAOImpl {
 		
 		try {
 			String password;
-			String reenteredPassword;
+			String reenteredPassword ="";
+			boolean isValid = false;
 			Scanner scanner = new Scanner(System.in);
 			
 			dataSource = jdbcObj.setUpPool();
@@ -119,22 +120,30 @@ public class LoginRegistrationDAOImpl {
 							System.out.println("\nPlease enter your new password : ");
 							password=scanner.nextLine();
 							BudgetPortal.goBackToPortal(password);
-							System.out.println("\nPlease reenter your password : ");
-							Console c = System.console();
-							if(c!=null) {
-								
-								char[] ch = c.readPassword();
-								reenteredPassword = String.valueOf(ch);// converting char array into string
+							isValid = BudgetPortal.validatePassword(password);
+							
+							if (isValid) {
+								System.out.println("\nPlease reenter your password : ");
+								Console c = System.console();
+								if(c!=null) {
+									
+									char[] ch = c.readPassword();
+									reenteredPassword = String.valueOf(ch);// converting char array into string
+								}
+								else {
+									//Password input for eclipse console
+									reenteredPassword=scanner.nextLine();
+								}
+
+									if(!password.equals(reenteredPassword)) {
+										System.out.println("\nYour password doesn't match. Please enter again. \n");
+							}
 							}
 							else {
-								//Password input for eclipse console
-								reenteredPassword=scanner.nextLine();
-							}
-							if(!password.equals(reenteredPassword)) {
-								System.out.println("\nYour password doesn't match. Please enter again. \n");
+								System.out.println("Your password must contain at least 5 characters, 1 Upper Case, 1 Number and 1 Special Character ! \n");
 							}
 						}
-						while(!password.equals(reenteredPassword));
+						while(!password.equals(reenteredPassword) || !isValid );
 						
 							Statement updatestmt = con.createStatement();
 							updatestmt.execute("UPDATE Account SET password = '"+reenteredPassword+"' WHERE email='"+emailId+"'");

@@ -313,7 +313,7 @@ public class BudgetPortal
 				
 				java.util.Date ToDateJava = FromDate.parse(ToDateString);
 				java.sql.Date ToDateSQL = new java.sql.Date(ToDateJava.getTime());
-				report.generateReport(FromDateSQL, ToDateSQL);
+				report.generateReport(FromDateSQL, ToDateSQL, currentAccountId);
 				viewDashboard(currentAccountId, username);
 			} catch (ParseException e) {
 				e.printStackTrace();

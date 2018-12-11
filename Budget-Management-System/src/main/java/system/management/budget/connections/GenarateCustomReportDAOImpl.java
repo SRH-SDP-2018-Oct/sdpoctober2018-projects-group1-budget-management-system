@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.Date;
 
 import javax.sql.DataSource;
-
+import org.apache.log4j.Logger;
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
@@ -23,16 +23,18 @@ public class GenarateCustomReportDAOImpl {
 	DatabaseConnect jdbcObj = new DatabaseConnect();
 
 	DataSource dataSource = null;
+	
+	final static Logger logger = Logger.getLogger(GenarateCustomReportDAOImpl.class);
 
-	public void generateReport(java.sql.Date customDateReportTo, java.sql.Date customDateReportFrom) {
+	public void generateReport(java.sql.Date customDateReportTo, java.sql.Date customDateReportFrom, int currentAccountId) {
 		try {
 			dataSource = jdbcObj.setUpPool();
 
 			con = dataSource.getConnection();
 			
 			Statement stmt = con.createStatement();
-			
-			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"'");
+			//logger.info("Generating Report");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"' and account_id ='"+ currentAccountId +"'" );
 			
 			FastReportBuilder drb = new FastReportBuilder();
 			DynamicReport dr = drb.addColumn("Merchant Name", "merchant_name", String.class.getName(), 30)

@@ -111,9 +111,15 @@ public class AddRemoveBankOrSubscription {
 			java.util.Date date2 = sdf2.parse(endDateString);
 			java.sql.Date endDateSQL = new java.sql.Date(date2.getTime());
 			
+			//Date validation
 			String valid = "(?:(?:31(-)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(-)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(-)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(-)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
-			//String year = "(\\d{4})$";
+			int lastFourDigitStart = Integer.parseInt(startDateString.substring(startDateString.length() - 4));
+			int lastFourDigitEnd = Integer.parseInt(endDateString.substring(endDateString.length() - 4));
 			if(startDateString.matches(valid) == false | endDateString.matches(valid) == false ) {
+				System.out.print("******* Invalid input *******\n");
+				getUserSubscriptionDetails(account_id, username);
+			}
+			if(lastFourDigitEnd-lastFourDigitStart < 0) {
 				System.out.print("******* Invalid input *******\n");
 				getUserSubscriptionDetails(account_id, username);
 			}

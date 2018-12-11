@@ -285,7 +285,9 @@ public class BudgetPortal
 				scan_1.close();
 				break;
 				
-		case 2: AddRemoveBankOrSubscription.menu(currentAccountId,username);
+		case 2: 
+				AddRemoveBankOrSubscription bankSubscription = new AddRemoveBankOrSubscription();
+				bankSubscription.menu(currentAccountId,username);
 				break;
 		
 		case 3:	transactions.transactionsInitialized(currentAccountId,username);

@@ -6,19 +6,28 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.*;
 
 public class BankDetails implements TransactionDetails {
 
 
-	static DatabaseConnect db = new DatabaseConnect();
-	static Connection con = db.dbConnect();
+	Connection con = null;
+	
+	DatabaseConnect jdbcObj = new DatabaseConnect();
+	
+	DataSource dataSource = null;
 	
 	public boolean getTransactions(int currentAccountId ) {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
 		try {
+				dataSource = jdbcObj.setUpPool();
+    		
+				con = dataSource.getConnection();
+				
 				Statement qStmt = con.createStatement();
 				qStmt.execute("Select DISTINCT b.bank_name, b.iban_num, t.* FROM Transactions t INNER JOIN ( SELECT bank.* FROM Bank, Transactions WHERE bank.account_id ='"+ currentAccountId +"' )b ON t.bank_id = b.bank_id ORDER BY t.transaction_date DESC, t.transaction_time DESC");
 				ResultSet rs = qStmt.getResultSet();
@@ -33,6 +42,14 @@ public class BankDetails implements TransactionDetails {
 		
 		}catch(Exception e) {
 			System.out.println("Error" + e);
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return false;
@@ -42,6 +59,10 @@ public class BankDetails implements TransactionDetails {
 		DashboardVO trans_row;
 		List <DashboardVO> foundTransactions = new ArrayList<DashboardVO>();
 			try {
+					dataSource = jdbcObj.setUpPool();
+	    		
+	    			con = dataSource.getConnection();
+	    			
 					Statement qStmt = con.createStatement();
 					qStmt.execute("Select * FROM Transactions WHERE account_id='"+ currentAccountId +"'AND Month(transaction_date) ='" + MonthSelected + "'AND Year(transaction_date) ='" + YearSelected + "'");
 					ResultSet rs = qStmt.getResultSet();
@@ -57,6 +78,14 @@ public class BankDetails implements TransactionDetails {
 			}
 			catch(Exception e) {
 				System.out.println("Error" + e);
+			}finally {
+				try {
+					if(con!=null) {
+						con.close();
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 	
 			return false;

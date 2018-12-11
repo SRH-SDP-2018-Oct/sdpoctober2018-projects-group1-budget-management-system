@@ -6,38 +6,53 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import system.management.budget.connections.DatabaseConnect;
 import system.management.budget.valueObjects.BankVO;
 
 public class CurrentBalance implements TransactionDetails {
-	
-	static DatabaseConnect db = new DatabaseConnect();
-	static Connection con = db.dbConnect();
-	
+
+	Connection con = null;
+
+	DatabaseConnect jdbcObj = new DatabaseConnect();
+
+	DataSource dataSource = null;
+
 	public boolean getTransactions(int currentAccountId) {
 		BankVO balance_row;
-		List <BankVO> foundBalances = new ArrayList<BankVO>();
-			try {
-					Statement qStmt = con.createStatement();
-					qStmt.execute("Select bank_name, iban_num, balance FROM Bank WHERE account_id='"+ currentAccountId +"'");
-					ResultSet rs = qStmt.getResultSet();
-		
-					while(rs.next()) 
-					{
-						balance_row = new BankVO(rs.getString("bank_name"),rs.getString("iban_num"),rs.getFloat("balance"));
-						foundBalances.add(balance_row);
-					}
-					
-				return showCurrentBalance(foundBalances);
-		
-			}catch(Exception e) {
-				System.out.println("Error" + e);
+		List<BankVO> foundBalances = new ArrayList<BankVO>();
+		try {
+			dataSource = jdbcObj.setUpPool();
+
+			con = dataSource.getConnection();
+			Statement qStmt = con.createStatement();
+			qStmt.execute("Select bank_name, iban_num, balance FROM Bank WHERE account_id='" + currentAccountId + "'");
+			ResultSet rs = qStmt.getResultSet();
+
+			while (rs.next()) {
+				balance_row = new BankVO(rs.getString("bank_name"), rs.getString("iban_num"), rs.getFloat("balance"));
+				foundBalances.add(balance_row);
 			}
-			
+
+			return showCurrentBalance(foundBalances);
+
+		} catch (Exception e) {
+			System.out.println("Error" + e);
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return false;
 	}
-	
-	public boolean showCurrentBalance(List <BankVO> foundBalances) {
+
+	public boolean showCurrentBalance(List<BankVO> foundBalances) {
 		try {
 			System.out.print("\n");
 			System.out.print(" DASHBOARD \n");

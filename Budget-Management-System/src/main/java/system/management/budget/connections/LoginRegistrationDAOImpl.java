@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
@@ -15,15 +16,23 @@ import system.management.budget.valueObjects.UserRegistrationVO;
 
 
 public class LoginRegistrationDAOImpl {
-	static DatabaseConnect db = new DatabaseConnect();
-	static Connection con = db.dbConnect();
+	
+	Connection con = null;
+	
+	DatabaseConnect jdbcObj = new DatabaseConnect();
+	
+	DataSource dataSource = null;
 	
 	public int createConnection(String username,String pass){
 		
     	try {
     		
+    		dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+    		
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Account");
+			ResultSet rs = stmt.executeQuery(jdbcObj.accSel);
 			while(rs.next()) {
 				String name = rs.getString("email");
 				if (username.equals(name)) {
@@ -39,18 +48,30 @@ public class LoginRegistrationDAOImpl {
 				
 			}
 			stmt.close();
-			System.out.println("Database connection success");
+			
     	} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return 0;
     }
 	
 	public boolean registrationDbConnection(UserRegistrationVO userDetails){
 
 		try {
+			dataSource = jdbcObj.setUpPool();
 			
-			PreparedStatement stmt = con.prepareStatement(db.accountAdd);
+			con = dataSource.getConnection();
+			
+			//PreparedStatement stmt = con.prepareStatement(jdbcObj.accountAdd);
+			PreparedStatement stmt = con.prepareStatement(jdbcObj.accountAdd);
 			stmt.setString(1, userDetails.getEmailID());
 			stmt.setString(2, userDetails.getFirstName());
 			stmt.setString(3, userDetails.getLastName());
@@ -63,6 +84,14 @@ public class LoginRegistrationDAOImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -72,11 +101,14 @@ public class LoginRegistrationDAOImpl {
 			String password;
 			String reenteredPassword;
 			Scanner scanner = new Scanner(System.in);
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/BMS_Schema", "root","root");
+			
+			dataSource = jdbcObj.setUpPool();
+			
+			con = dataSource.getConnection();
 			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT email,recovery_answer FROM Account");
+			ResultSet rs = stmt.executeQuery(jdbcObj.forgotPasswordCheck);
+			
 			while(rs.next()){
 				String emailId= rs.getString("email");
 				if(emailId.equals(email)) {
@@ -112,6 +144,14 @@ public class LoginRegistrationDAOImpl {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}

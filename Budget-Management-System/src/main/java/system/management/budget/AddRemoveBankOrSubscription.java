@@ -1,6 +1,9 @@
 package system.management.budget;
 
 import java.util.Scanner;
+
+import javax.sql.DataSource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -13,10 +16,13 @@ import system.management.budget.connections.*;
 
 public class AddRemoveBankOrSubscription {
 
-	static DatabaseConnect db = new DatabaseConnect();
-	static Connection con = db.dbConnect();
+	Connection con = null;
 	
-	public static void menu(int account_id, String username) {
+	DatabaseConnect jdbcObj = new DatabaseConnect();
+	
+	DataSource dataSource = null;
+	
+	public void menu(int account_id, String username) {
 		System.out.println("\n");
 		System.out.println("*******************  Menu Options  *******************");
 		System.out.println(" 1 : Add Bank Account				  				  ");
@@ -54,7 +60,7 @@ public class AddRemoveBankOrSubscription {
 		scan.close();
 	}
 	
-	public static void getUserBankDetails(int account_id, String username) {
+	public  void getUserBankDetails(int account_id, String username) {
 		System.out.println("Add a new bank account\n");
 		Scanner scanner = new Scanner(System.in);
 		
@@ -83,7 +89,7 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static void getUserSubscriptionDetails(int account_id, String username) {
+	public void getUserSubscriptionDetails(int account_id, String username) {
 		
 		try {
 			Scanner scanner = new Scanner(System.in);
@@ -126,10 +132,14 @@ public class AddRemoveBankOrSubscription {
 		}
 	}
 	
-	public static boolean checkIban(int account_id, String iban, float balance, String bank_name) {
+	public boolean checkIban(int account_id, String iban, float balance, String bank_name) {
 		try {
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+			
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery(db.bankSel);
+			ResultSet rs = qStmt.executeQuery(jdbcObj.bankSel);
 			boolean temp = rs.next();
 			
 			if (temp == false) {
@@ -147,13 +157,25 @@ public class AddRemoveBankOrSubscription {
 			}		
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 	
-	private static boolean addBank(int account_id, String iban, float balance, String bank_name) {
+	private boolean addBank(int account_id, String iban, float balance, String bank_name) {
 		try {
-			PreparedStatement pStmnt = con.prepareStatement(db.bankAdd);
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+    		
+			PreparedStatement pStmnt = con.prepareStatement(jdbcObj.bankAdd);
 			pStmnt.setString(1, iban);
 			pStmnt.setFloat(2, balance);
 			pStmnt.setInt(3, account_id);
@@ -164,13 +186,25 @@ public class AddRemoveBankOrSubscription {
 		}
 		catch (Exception e){
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 
-	public static boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL) {
+	public boolean addSubscription(int account_id, String subName, java.sql.Date startDateSQL, java.sql.Date endDateSQL) {
 		try {
-			PreparedStatement pStmnt = con.prepareStatement(db.subAdd);
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+			
+			PreparedStatement pStmnt = con.prepareStatement(jdbcObj.subAdd);
 			pStmnt.setString(1, subName);
 			pStmnt.setDate(2, startDateSQL);
 			pStmnt.setDate(3, endDateSQL);
@@ -180,16 +214,28 @@ public class AddRemoveBankOrSubscription {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 
-	public static boolean removeBank(int account_id, String username) {
+	public boolean removeBank(int account_id, String username) {
 		
 		System.out.println("Select which account you would like to delete: \n ");
 		try {
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+			
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery(db.bankCheck + account_id);
+			ResultSet rs = qStmt.executeQuery(jdbcObj.bankCheck + account_id);
 			boolean deleted = listGenerator(rs,true,account_id,username);
 			if (deleted == true) {
 				System.out.print("Successfully removed bank account!\n");
@@ -199,16 +245,28 @@ public class AddRemoveBankOrSubscription {
 			e.printStackTrace();
 			System.out.print("******* Invalid input *******\n");
 			removeBank(account_id, username);
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 	
-	public static boolean removeSubscription(int account_id, String username) {
+	public boolean removeSubscription(int account_id, String username) {
 		
 		System.out.println("Select which subscription you would like to delete: \n ");
 		try {
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+    		
 			Statement qStmt = con.createStatement();
-			ResultSet rs = qStmt.executeQuery(db.subCheck + account_id);
+			ResultSet rs = qStmt.executeQuery(jdbcObj.subCheck + account_id);
 			boolean deleted = listGenerator(rs,false,account_id,username);
 			BudgetPortal.printSeparator(55);
 			if (deleted == true) {
@@ -218,11 +276,19 @@ public class AddRemoveBankOrSubscription {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 	
-	public static boolean listGenerator(ResultSet rs, boolean bank, int account_id, String username) {
+	public boolean listGenerator(ResultSet rs, boolean bank, int account_id, String username) {
 		try {
 			List<String> tempList = new ArrayList<String>();
 			List<String> bankNameList = new ArrayList<String>();
@@ -252,8 +318,11 @@ public class AddRemoveBankOrSubscription {
 		return false;
 	}
 	
-	public static boolean deleter(boolean bank, int account_id, String username, List<String> list) {
+	public boolean deleter(boolean bank, int account_id, String username, List<String> list) {
 		try{
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("\nSelection : ");
 			int choice = scanner.nextInt();
@@ -267,13 +336,13 @@ public class AddRemoveBankOrSubscription {
 				menu(account_id, username);
 			}
 			if (bank == true) {
-				PreparedStatement pStmnt = con.prepareStatement(db.bankDel);
+				PreparedStatement pStmnt = con.prepareStatement(jdbcObj.bankDel);
 				pStmnt.setInt(1, account_id);
 				pStmnt.setString(2, toBeDeleted);
 				pStmnt.execute();
 				return true;
 			} else {
-				PreparedStatement pStmnt = con.prepareStatement(db.subDel);
+				PreparedStatement pStmnt = con.prepareStatement(jdbcObj.subDel);
 				pStmnt.setInt(1, account_id);
 				pStmnt.setString(2, toBeDeleted);
 				pStmnt.execute();
@@ -283,6 +352,14 @@ public class AddRemoveBankOrSubscription {
 				e.printStackTrace();
 				System.out.print("******* Invalid input *******\n");
 				removeSubscription(account_id, username);
+			}finally {
+				try {
+					if(con!=null) {
+						con.close();
+					}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		return false;
 		}

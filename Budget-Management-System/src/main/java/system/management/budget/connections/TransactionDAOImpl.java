@@ -14,15 +14,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import javax.sql.DataSource;
+
 import system.management.budget.BudgetPortal;
 import system.management.budget.valueObjects.BankVO;
 import system.management.budget.valueObjects.TransactionVO;
 
 public class TransactionDAOImpl {
+
+	Connection con = null;
 	
-	static DatabaseConnect db = new DatabaseConnect();
-	static Connection con = db.dbConnect();
+	DatabaseConnect jdbcObj = new DatabaseConnect();
 	
+	DataSource dataSource = null;
 	
 	public void transactionsInitialized(int currentAccountId, String username) {
 		
@@ -102,6 +106,10 @@ public class TransactionDAOImpl {
 		System.out.println("\nPlease enter the IBAN option number under which you want the transaction to be linked : ");
 		List<BankVO> bankDetailsList = new ArrayList<BankVO>();
 		try {
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+    		
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Bank WHERE account_id='"+ currentAccountId +"'");
 			
@@ -121,20 +129,30 @@ public class TransactionDAOImpl {
 				counter++;
 				System.out.print("\n"+counter+" :   IBAN : " + bankDetailsList.get(i).getIban_num()+"   Balance : "+bankDetailsList.get(i).getBalance()+"\n");
 			}
-			
-		return bankDetailsList;
-		}	
-		 catch (Exception e) {
-			
+
+			return bankDetailsList;
+		} catch (Exception e) {
+
 			e.printStackTrace();
+		}finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return bankDetailsList;
 	}
 	public boolean addTransactionToDb(int currentAccountID, int bank_id, TransactionVO transactionDetails) {
 		
 		try {
-			
-			PreparedStatement stmt = con.prepareStatement(db.transactionsAdd);
+			dataSource = jdbcObj.setUpPool();
+    		
+    		con = dataSource.getConnection();
+    		
+			PreparedStatement stmt = con.prepareStatement(jdbcObj.transactionsAdd);
 			stmt.setInt(1, currentAccountID);
 			stmt.setInt(2, bank_id);
 			stmt.setString(3, transactionDetails.getTransactionName());
@@ -156,6 +174,14 @@ public class TransactionDAOImpl {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 		

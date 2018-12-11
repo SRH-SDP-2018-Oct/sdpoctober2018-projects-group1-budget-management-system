@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
+
+import javax.sql.DataSource;
+
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
@@ -14,17 +17,23 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class GenarateCustomReportDAOImpl {
-	
-	public void generateReport(java.sql.Date customDateReportTo,java.sql.Date customDateReportFrom){
+
+	Connection con = null;
+
+	DatabaseConnect jdbcObj = new DatabaseConnect();
+
+	DataSource dataSource = null;
+
+	public void generateReport(java.sql.Date customDateReportTo, java.sql.Date customDateReportFrom) {
 		try {
-			ResultSet rs = null;
-				
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bms_schema", "root","root");
+			dataSource = jdbcObj.setUpPool();
+
+			con = dataSource.getConnection();
 			
 			Statement stmt = con.createStatement();
 			
-			rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportFrom +"' and  '"+ customDateReportTo +"'");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM TRANSACTIONS WHERE TRANSACTION_DATE BETWEEN  '"+ customDateReportTo +"' and '"+ customDateReportFrom +"'");
+			
 			FastReportBuilder drb = new FastReportBuilder();
 			DynamicReport dr = drb.addColumn("Merchant Name", "merchant_name", String.class.getName(), 30)
 					.addColumn("Transaction Name", "transaction_name", String.class.getName(), 30)
@@ -39,9 +48,18 @@ public class GenarateCustomReportDAOImpl {
 																						
 			JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr, new ClassicLayoutManager(),
 					resultsetdatasource);
-			JasperViewer.viewReport(jp); // finally display the report report
+			JasperViewer.viewReport(jp,false); // finally display the report report
+			stmt.close();
 		} catch (Exception ex) {
 			System.out.println(ex);
+		}	finally {
+			try {
+				if(con!=null) {
+					con.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
